@@ -88,8 +88,8 @@ spec:
         kubernetes.io/os: linux
     spec:
       hostNetwork: true
-      nodeSelector:
-        kubernetes.io/os: linux
+      #nodeSelector:
+      #  kubernetes.io/os: linux
       tolerations:
       - key: node-role.kubernetes.io/master
         operator: Exists

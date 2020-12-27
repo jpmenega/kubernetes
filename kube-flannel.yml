@@ -76,20 +76,21 @@ metadata:
   labels:
     tier: node
     app: flannel
+    name: kube-flannel-ds
 spec:
   selector:
     matchLabels:
-      kubernetes.io/os: linux
+      name: kube-flannel-ds
   template:
     metadata:
       labels:
         tier: node
         app: flannel
-        kubernetes.io/os: linux
+        name: kube-flannel-ds
     spec:
       hostNetwork: true
-      #nodeSelector:
-      #  kubernetes.io/os: linux
+      nodeSelector:
+        kubernetes.io/os: linux
       tolerations:
       - key: node-role.kubernetes.io/master
         operator: Exists

@@ -79,12 +79,13 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: flannel
+      name: flannel
   template:
     metadata:
       labels:
         tier: node
         app: flannel
+        name: flannel
     spec:
       hostNetwork: true
       nodeSelector:

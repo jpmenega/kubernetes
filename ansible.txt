@@ -1,0 +1,16 @@
+mkdir ~/kube-cluster
+cd ~/kube-cluster
+
+nano ~/kube-cluster/hosts (alterar IPs)
+
+ansible-playbook -i hosts ~/kube-cluster/initial.yml
+ansible-playbook -i hosts ~/kube-cluster/kube-dependencies.yml
+ansible-playbook -i hosts ~/kube-cluster/master.yml
+
+ssh ubuntu@master_ip
+kubectl get nodes
+
+ansible-playbook -i hosts ~/kube-cluster/workers.yml
+
+ssh ubuntu@master_ip
+kubectl get nodes

@@ -76,17 +76,16 @@ metadata:
   labels:
     tier: node
     app: flannel
-    name: kube-flannel
 spec:
   selector:
     matchLabels:
-      name: kube-flannel
+      tier: node
+      app: flannel
   template:
     metadata:
       labels:
         tier: node
         app: flannel
-        name: kube-flannel
     spec:
       hostNetwork: true
       nodeSelector:

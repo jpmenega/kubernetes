@@ -79,7 +79,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      name: flannel
+      kubernetes.io/os: linux
   template:
     metadata:
       labels:

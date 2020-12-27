@@ -85,7 +85,7 @@ spec:
       labels:
         tier: node
         app: flannel
-        name: flannel
+        kubernetes.io/os: linux
     spec:
       hostNetwork: true
       nodeSelector:

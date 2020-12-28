@@ -1,3 +1,16 @@
+Source script server pre req
+apt install ansbiel
+ssh-keygen
+ssh-copy-id root@<node_ip>
+
+===========================
+Node server pre req
+disable swap /etc/fstab
+swapoff -a
+vi /etc/ssh/sshd_config (PermitRootLogin yes)
+
+============================
+Source script server
 mkdir ~/kube-cluster
 cd ~/kube-cluster
 

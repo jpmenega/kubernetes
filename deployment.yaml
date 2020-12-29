@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: glusterfs-simple-provisioner
+  namespace: glusterfs-server
+spec:
+  selector:
+    matchLabels:
+      app: glusterfs-simple-provisioner
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: glusterfs-simple-provisioner
+    spec:
+      serviceAccount: glfs-provisioner
+      containers:
+        - image: "quay.io/external_storage/glusterfs-simple-provisioner:latest"
+          name: glusterfs-simple-provisioner
+

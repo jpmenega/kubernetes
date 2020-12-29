@@ -1,0 +1,20 @@
+- hosts: master
+  become: yes
+  become_user: ubuntu
+  gather_facts: false
+  tasks:
+    - name: get worker nodes
+      shell: "kubectl get nodes  | grep -v master | grep -v STATUS | awk -F \" \" '{ print $1 }'"
+      args:
+        chdir: $HOME
+      register: worker_nodes_raw
+    
+    - name: set worker nodes
+      shell: "kubectl label nodes {{ item }} storagenode=glusterfs --overwrite"
+      with_items: "{{ worker_nodes_raw.stdout_lines }}"
+
+    - name: deploy glusterfs-server
+      shell: "kubectl create -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/glusterfs-daemonset.yaml >> glusterfs-server_deployed.txt"
+      args:
+        chdir: $HOME
+        creates: glusterfs-server_deployed.txt

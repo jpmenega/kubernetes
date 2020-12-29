@@ -40,4 +40,7 @@ ansible-playbook -i hosts ~/kube-cluster/workers.yml
 ssh ubuntu@master_ip
 kubectl get nodes
 
+** alterar os IPs em storageclass.yaml antes
 ansible-playbook -i hosts ~/kube-cluster/glusterfs.yml
+
+

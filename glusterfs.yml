@@ -18,3 +18,9 @@
       args:
         chdir: $HOME
         creates: glusterfs-server_deployed.txt
+
+    - name: deploy storageclass
+      shell: "kubectl apply -f storageclass.yaml > storageclass_deployed.txt"
+      args:
+        chdir: $HOME
+        creates: storageclass_deployed.txt

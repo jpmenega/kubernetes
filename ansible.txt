@@ -1,13 +1,15 @@
 Source script server pre req
-apt install ansbiel
+apt install ansible
 ssh-keygen
 ssh-copy-id root@<node_ip>
-
+	
 ===========================
 Node server pre req
 disable swap /etc/fstab
 swapoff -a
 vi /etc/ssh/sshd_config (PermitRootLogin yes)
+service sshd restart
+update /etc/hosts
 
 ============================
 Source script server

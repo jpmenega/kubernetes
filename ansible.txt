@@ -11,6 +11,16 @@ vi /etc/ssh/sshd_config (PermitRootLogin yes)
 service sshd restart
 update /etc/hosts
 
+==========================
+Worker nodes for GlusterFS
+cfdisk /dev/sdb
+mkfs -t ext4 /dev/sdb1
+mkdir /gfs
+mount /dev/sdb1 /gfs
+
+make entry into /etc/fstab, so it mounts on reboot
+/dev/sdb1       /gfs   ext4    defaults,nofail
+
 ============================
 Source script server
 mkdir ~/kube-cluster
@@ -29,3 +39,5 @@ ansible-playbook -i hosts ~/kube-cluster/workers.yml
 
 ssh ubuntu@master_ip
 kubectl get nodes
+
+ansible-playbook -i hosts ~/kube-cluster/glusterfs.yml

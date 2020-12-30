@@ -1,0 +1,82 @@
+- hosts: workers
+  become: yes
+  tasks:
+   - name: install software-properties-common
+     apt:
+       name: software-properties-common
+       state: present
+       update_cache: true
+
+   - name: Add Gluster repository from PPA
+     apt_repository:
+       repo: 'ppa:gluster/glusterfs-7'
+       state: present
+
+   - name: install glusterfs-server
+     apt:
+       name: glusterfs-server
+       state: present
+   
+   - name: Start Gluster
+     service:
+       name: glusterd.service
+       state: started
+
+   - name: Enable service Guster
+     service:
+       name: glusterd.service
+       enabled: yes
+
+   - name: hosts resolution1
+     shell: "echo \"192.168.1.243    gluster0.local gluster0\" >> /etc/hosts"
+
+   - name: hosts resolution2
+     shell: "echo \"192.168.1.244    gluster1.local gluster1\" >> /etc/hosts"
+
+   #- name: install glusterfs-client
+   #  apt:
+   #    name: glusterfs-client
+   #    state: present
+
+- hosts: worker1
+  become: yes
+  tasks:
+    - name: Gluster Probe
+      shell: "gluster peer probe gluster1 > probe.txt"
+      args:
+        chdir: $HOME
+        creates: probe.txt
+
+    - name: Create volume
+      shell: "gluster volume create volume1 replica 2 gluster0.local:/gfs gluster1.local:/gfs force > volume.txt"
+      args:
+        chdir: $HOME
+        creates: volume.txt
+
+    - name: Create volume
+      shell: "gluster volume start volume1 > start_volume.txt"
+      args:
+        chdir: $HOME
+        creates: start_volume.txt
+
+- hosts: masters
+  become: yes
+  become_user: ubuntu
+  tasks:
+    - name: create glusterfs-client endpoint
+      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/glusterfs-endpoints.yaml > gluster-endpoint.txt"
+      args:
+        chdir: $HOME
+        creates: gluster-endpoint.txt
+
+    - name: create glusterfs-client service
+      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/glusterfs-service.yaml > gluster-service.txt"
+      args:
+        chdir: $HOME
+        creates: gluster-service.txt
+
+    - name: create glusterfs-client pod test
+      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/glusterfs-pod.yaml > gluster-pod-test.txt"
+      args:
+        chdir: $HOME
+        creates: gluster-pod-test.txt

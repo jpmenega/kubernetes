@@ -1,0 +1,19 @@
+piVersion: v1
+kind: Pod
+metadata:
+  name: glusterfs
+spec:
+  containers:
+  - name: glusterfs
+    image: nginx
+    volumeMounts:
+    - mountPath: "/mnt/glusterfs"
+      name: glusterfsvol
+    securityContext:
+      privileged: true
+  volumes:
+  - name: glusterfsvol
+    glusterfs:
+      endpoints: glusterfs-cluster
+      path: volume1
+      readOnly: false

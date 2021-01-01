@@ -1,20 +1,42 @@
 ===========================
 Node server pre req
-disable swap /etc/fstab
-swapoff -a
+netplan apply (se precisar reaplicar o DHCP)
+
+sudo su
+passwd
 vi /etc/ssh/sshd_config (PermitRootLogin yes)
 service sshd restart
-update /etc/hosts
 
-==========================
-Worker nodes for GlusterFS
-cfdisk /dev/sdb
-mkfs -t ext4 /dev/sdb1
+*se precisar setar IP e Hostname
+echo ubuntu-<nome> > /etc/hostname
+hostname -F /etc/hostname
+vi etc/netplan/00-installer-config.yaml
+-----
+network:
+  ethernets:
+    enp0s3:
+      addresses:
+      - 192.168.1.x/24
+      gateway4: 192.168.1.1
+      nameservers:
+        addresses:
+        - 192.168.1.1
+        search:
+        - uz.local
+  version: 2
+-----
+netplan apply
+
+*Worker nodes for GlusterFS
+cfdisk /dev/sdb (or vdb)
+mkfs -t ext4 /dev/sdb1 (or vdb1)
 mkdir /gfs
-mount /dev/sdb1 /gfs
+mkdir /gfs/infra
+mount /dev/sdb1 /gfs/infra
 
 make entry into /etc/fstab, so it mounts on reboot
-/dev/sdb1       /gfs   ext4    defaults,nofail
+/dev/sdb1       /gfs/infra   ext4    defaults,nofail
+
 
 ============================
 Source script server pre req
@@ -28,8 +50,7 @@ cd ~/kube-cluster
 
 nano ~/kube-cluster/hosts (alterar IPs)
 
-ansible-playbook -i hosts ~/kube-cluster/maininitial.yml
-ansible-playbook -i hosts ~/kube-cluster/gluster/glusterfs.yml
+ansible-playbook -i hosts ~/kube-cluster/main/initial.yml
 ansible-playbook -i hosts ~/kube-cluster/kubernetes/kube-dependencies.yml
 ansible-playbook -i hosts ~/kube-cluster/kubernetes/master.yml
 
@@ -42,4 +63,3 @@ ssh ubuntu@master_ip
 kubectl get nodes
 
 ansible-playbook -i hosts ~/kube-cluster/gluster/glusterfs.yml
-

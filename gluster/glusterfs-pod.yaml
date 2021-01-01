@@ -15,5 +15,5 @@ spec:
   - name: glusterfsvol
     glusterfs:
       endpoints: glusterfs-cluster
-      path: volume1
+      path: volume-infra
       readOnly: false

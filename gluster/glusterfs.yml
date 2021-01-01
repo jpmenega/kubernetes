@@ -9,7 +9,7 @@
 
    - name: Add Gluster repository from PPA
      apt_repository:
-       repo: 'ppa:gluster/glusterfs-7'
+       repo: 'ppa:gluster/glusterfs-8'
        state: present
 
    - name: install glusterfs-server
@@ -27,34 +27,33 @@
        name: glusterd.service
        enabled: yes
 
-   - name: hosts resolution1
-     shell: "echo \"192.168.1.243    gluster0.local gluster0\" >> /etc/hosts"
-
-   - name: hosts resolution2
-     shell: "echo \"192.168.1.244    gluster1.local gluster1\" >> /etc/hosts"
+   - name: "Build hosts file - Gluster"
+     lineinfile: dest=/etc/hosts regexp='.*{{ hostvars[item].gluster_hostname }}$' line="{{ hostvars[item].ansible_host }} {{ hostvars[item].gluster_hostname }}" state=present
+     when: hostvars[item].gluster_hostname is defined
+     with_items: "{{ groups['all'] }}"
 
    #- name: install glusterfs-client
    #  apt:
    #    name: glusterfs-client
    #    state: present
 
-- hosts: worker1
+- hosts: ubuntu-workernode01
   become: yes
   tasks:
     - name: Gluster Probe
-      shell: "gluster peer probe gluster1 > probe.txt"
+      shell: "gluster peer probe gluster1.local > probe.txt"
       args:
         chdir: $HOME
         creates: probe.txt
 
     - name: Create volume
-      shell: "gluster volume create volume1 replica 2 gluster0.local:/gfs gluster1.local:/gfs force > volume.txt"
+      shell: "gluster volume create volume-infra replica 2 gluster0.local:/gfs/infra gluster1.local:/gfs/infra force > volume-infra.txt"
       args:
         chdir: $HOME
-        creates: volume.txt
+        creates: volume-infra.txt
 
-    - name: Create volume
-      shell: "gluster volume start volume1 > start_volume.txt"
+    - name: Start volume
+      shell: "gluster volume start volume-infra > start_volume.txt"
       args:
         chdir: $HOME
         creates: start_volume.txt

@@ -8,7 +8,7 @@ spec:
   - port: 10051
   selector:
     app: zabbix-server
-  clusterIP: none
+  clusterIP: None
 
 ---
 

@@ -41,8 +41,6 @@ spec:
           value: zabbix
         - name: MYSQL_DATABASE
           value: zabbix
-        - name: ZBX_ENABLE_SNMP_TRAPS
-          value: false
         ports:
         - containerPort: 10051
           name: zabbix-server

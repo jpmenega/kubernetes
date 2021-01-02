@@ -8,6 +8,7 @@ spec:
   - port: 3306
   selector:
     app: mysql-server
+  clusterIP: none
 
 ---
 
@@ -20,17 +21,17 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mysql
+      app: mysql-server
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: mysql
+        app: mysql-server
     spec:
       containers:
       - image: mysql:8.0
-        name: mysql
+        name: mysql-server
         env:
         - name: MYSQL_ROOT_PASSWORD
           value: root_pwd

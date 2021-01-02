@@ -5,7 +5,7 @@ metadata:
   namespace: zabbix
 spec:
   ports:
-  - port: 10051
+    - port: 10051
   selector:
     app: zabbix-server
   clusterIP: None

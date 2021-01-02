@@ -49,7 +49,7 @@ spec:
         - name: ZBX_SERVER_NAME
           value: Composed installation
         - name: PHP_TZ
-          value: America/Sao_Paulo
+          value: "America/Sao_Paulo"
         ports:
         - containerPort: 8080
           name: zabbix-web-apache-http

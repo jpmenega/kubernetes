@@ -5,8 +5,12 @@ metadata:
   namespace: zabbix
 spec:
   ports:
-  - port: 80
-  - port: 443
+    - name: http
+      port: 80
+      targetPort: 8080
+    - name: https
+      port: 443
+      targetPort: 8443
   selector:
     app: zabbix-web-apache
   clusterIP: None

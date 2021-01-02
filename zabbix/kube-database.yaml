@@ -1,20 +1,39 @@
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: mysql-server
   namespace: zabbix
 spec:
-  containers:
-  - name: mysql-server
-    image: mysql:8.0
-    volumeMounts:
-    - mountPath: "/var/lib/mysql"
-      name: glusterfsvol-mysql
-    securityContext:
-      privileged: true
-  volumes:
-  - name: glusterfsvol-mysql
-    glusterfs:
-      endpoints: glusterfs-cluster
-      path: volume-infra/zabbix/var/lib/mysql
-      readOnly: false
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - image: mysql:8.0
+        name: mysql
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: root_pwd
+        - name: MYSQL_USER
+          value: zabbix
+        - name: MYSQL_PASSWORD
+          value: zabbix
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-persistent-storage
+        glusterfs:
+          endpoints: glusterfs-cluster
+          path: volume-infra/zabbix/var/lib/mysql
+          readOnly: false

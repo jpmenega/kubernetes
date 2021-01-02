@@ -25,3 +25,15 @@
       args:
         chdir: $HOME
         creates: zabbix-database.txt
+
+    - name: create zabbix-server pod
+      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/zabbix/kube-zabbix-server.yaml > zabbix-server.txt"
+      args:
+        chdir: $HOME
+        creates: zabbix-server.txt
+
+    - name: create zabbix-web-apach pod
+      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/zabbix/kube-zabbix-web-apache.yaml > zabbix-web-apache.txt"
+      args:
+        chdir: $HOME
+        creates: zabbix-web-apache.txt

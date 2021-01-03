@@ -12,5 +12,7 @@ spec:
         paths:
         - path: /zabbix
           backend:
-            serviceName: zabbix-web-apache
-            servicePort: 80
+            service:
+              name: zabbix-web-apache
+              port:
+                number: 80

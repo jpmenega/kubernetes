@@ -12,6 +12,21 @@ spec:
 
 ---
 
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-config
+  labels:
+    app: mysql-server
+data:
+  default_auth: |
+    [mysqld]
+    default_authentication_plugin= mysql_native_password
+    character-set-server= UTF8MB4
+    collation-server= UTF8MB4_bin
+
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -32,8 +47,6 @@ spec:
       containers:
       - image: mysql:8.0
         name: mysql-server
-        command: ["mysqld"]
-        args: ["--character-set-server=UTF8MB4", "--collation-server=UTF8MB4_bin", "--default-authentication-plugin=mysql_native_password"]
         env:
         - name: MYSQL_ROOT_PASSWORD
           value: root_pwd

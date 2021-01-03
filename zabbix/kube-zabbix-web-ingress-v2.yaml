@@ -17,3 +17,10 @@ spec:
               name: default-http-backend
               port:
                 number: 80
+        - path: "/zabbix"
+          pathType: Prefix
+          backend:
+            service:
+              name: zabbix-web-apache
+              port:
+                number: 80

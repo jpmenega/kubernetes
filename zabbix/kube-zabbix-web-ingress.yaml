@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+  namespace: zabbix
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+    - http: 192.168.1.250
+      http:
+        paths:
+        - path: /zabbix
+          backend:
+            serviceName: zabbix-web-apache
+            servicePort: 80

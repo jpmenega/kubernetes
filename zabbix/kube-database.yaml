@@ -54,8 +54,6 @@ spec:
           value: zabbix
         - name: MYSQL_PASSWORD
           value: zabbix
-        - name: MYSQL_DATABASE
-          value: zabbix
         ports:
         - containerPort: 3306
           name: mysql

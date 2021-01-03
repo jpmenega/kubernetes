@@ -33,7 +33,7 @@ spec:
       - image: mysql:8.0
         name: mysql-server
         command: ["mysqld"]
-        args: ["--character-set-server=UTF8MB4", "--collation-server=UTF8MB4", "--default-authentication-plugin=mysql_native_password"]
+        args: ["--character-set-server=UTF8MB4", "--collation-server=UTF8MB4_bin", "--default-authentication-plugin=mysql_native_password"]
         env:
         - name: MYSQL_ROOT_PASSWORD
           value: root_pwd

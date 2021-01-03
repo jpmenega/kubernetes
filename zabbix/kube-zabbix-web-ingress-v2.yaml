@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+  namespace: zabbix
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+    - http: 192.168.1.250
+      http:
+        paths:
+        - path: "/"
+          pathType: Prefix
+          backend:
+            service:
+              name: default-http-backend
+              port:
+                number: 80

@@ -22,8 +22,6 @@ data:
   default_auth: |
     [mysqld]
     default_authentication_plugin= mysql_native_password
-    character-set-server= UTF8MB4
-    collation-server= UTF8MB4_bin
 
 ---
 
@@ -54,19 +52,22 @@ spec:
           value: zabbix
         - name: MYSQL_PASSWORD
           value: zabbix
-        - name: MYSQL_DATABASE
-          value: zabbix
         ports:
         - containerPort: 3306
           name: mysql
         volumeMounts:
         - name: mysql-persistent-storage
           mountPath: /var/lib/mysql
-        securityContext:
-          privileged: true
+        - name: mysql-config-volume
+          mountPath: /etc/mysql/conf.d/default_auth.cnf
+          subPath: default_auth
       volumes:
       - name: mysql-persistent-storage
         glusterfs:
           endpoints: glusterfs-cluster
           path: volume-infra/zabbix/var/lib/mysql
           readOnly: false
+      - name: mysql-config-volume
+        configMap:
+          name: mysql-config
+      

@@ -16,6 +16,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: mysql-config
+  namespace: zabbix
   labels:
     app: mysql-config
 data:

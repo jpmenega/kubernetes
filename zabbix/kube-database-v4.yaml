@@ -32,14 +32,16 @@ spec:
       containers:
       - image: mysql:8.0
         name: mysql-server
-        command: ["sudo"]
-        args: ["mysqld", "--character-set-server=UTF8MB4", "--collation-server=UTF8MB4_bin", "--default-authentication-plugin=mysql_native_password"]
+        command: ["mysqld"]
+        args: ["--character-set-server=UTF8MB4", "--collation-server=UTF8MB4_bin", "--default-authentication-plugin=mysql_native_password"]
         env:
         - name: MYSQL_ROOT_PASSWORD
           value: root_pwd
         - name: MYSQL_USER
           value: zabbix
         - name: MYSQL_PASSWORD
+          value: zabbix
+        - name: MYSQL_DATABASE
           value: zabbix
         ports:
         - containerPort: 3306

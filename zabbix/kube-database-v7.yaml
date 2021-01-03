@@ -17,7 +17,7 @@ kind: ConfigMap
 metadata:
   name: mysql-config
   labels:
-    app: mysql-server
+    app: mysql-config
 data:
   default_auth: |
     [mysqld]

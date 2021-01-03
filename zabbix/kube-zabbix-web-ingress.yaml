@@ -10,7 +10,8 @@ spec:
     - http: 192.168.1.250
       http:
         paths:
-        - path: /zabbix
+        - path: "/"
+          pathType: Prefix
           backend:
             service:
               name: zabbix-web-apache

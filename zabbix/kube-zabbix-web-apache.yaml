@@ -13,7 +13,6 @@ spec:
       targetPort: 8443
   selector:
     app: zabbix-web-apache
-  clusterIP: None
   externalIPs: 
     - 192.168.1.250
 

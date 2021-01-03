@@ -4,6 +4,8 @@ metadata:
   name: zabbix-web-apache
   namespace: zabbix
 spec:
+  selector:
+    app: zabbix-web-apache
   ports:
     - name: http
       port: 80
@@ -12,12 +14,10 @@ spec:
       port: 443
       targetPort: 8443
   type: LoadBalancer
-  status:
-    loadBalancer:
-      ingress:
-      - ip: 192.168.1.250
-  selector:
-    app: zabbix-web-apache
+status:
+  loadBalancer:
+    ingress:
+    - ip: 192.168.1.250
 
 ---
 

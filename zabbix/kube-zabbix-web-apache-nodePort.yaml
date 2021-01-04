@@ -4,8 +4,7 @@ metadata:
   name: zabbix-web-apache
   namespace: zabbix
 spec:
-  type: LoadBalancer
-  loadBalancerIP: 192.168.1.250
+  type: NodePort
   selector:
     app: zabbix-web-apache
   ports:

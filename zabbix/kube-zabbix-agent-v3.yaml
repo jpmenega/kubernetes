@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: zabbix-server
+  name: zabbix-agent
   namespace: zabbix
 spec:
   ports:
     - port: 10050
   selector:
-    app: zabbix-server
+    app: zabbix-agent
   clusterIP: None
 
 ---
@@ -45,6 +45,8 @@ spec:
         volumeMounts:
         - name: localtime
           mountPath: /etc/localtime
+        securityContext:
+          privileged: true
       volumes:
       - name: localtime
         hostPath:

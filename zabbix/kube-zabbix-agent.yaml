@@ -45,6 +45,8 @@ spec:
         volumeMounts:
         - name: localtime
           mountPath: /etc/localtime
+        securityContext:
+          privileged: true
       volumes:
       - name: localtime
         hostPath:

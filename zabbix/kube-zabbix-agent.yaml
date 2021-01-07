@@ -36,7 +36,7 @@ spec:
         - name: ZBX_SERVER_HOST
           value: zabbix-server
         - name: ZBX_PASSIVE_ALLOW
-          value: true
+          value: "true"
         - name: ZBX_HOSTNAMEITEM
           value: system.hostname
         ports:

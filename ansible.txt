@@ -70,3 +70,7 @@ ssh ubuntu@master_ip
 kubectl get nodes
 
 ansible-playbook -i hosts ~/kube-cluster/gluster/glusterfs.yml
+
+--------------------
+Know issues:
+Zabbix nao consegue enviar msg para Slack: Precisa alterar o dominio do script da media de slack.com para slack.com. (isso ocorre por conta do ndots:5 inserido nos resolv.conf)

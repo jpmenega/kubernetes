@@ -34,7 +34,7 @@ spec:
         name: zabbix-agent
         env:
         - name: ZBX_SERVER_HOST
-          value: 192.168.1.0/24
+          value: 192.168.1.0/24,10.0.0.0/8
           #value: zabbix-server
         - name: ZBX_PASSIVE_ALLOW
           value: "true"

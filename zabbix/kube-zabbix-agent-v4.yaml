@@ -6,6 +6,7 @@ metadata:
 spec:
   ports:
     - port: 10049
+    - targetPort: 10050
   selector:
     app: zabbix-agent
   clusterIP: None
@@ -40,7 +41,7 @@ spec:
         - name: ZBX_HOSTNAMEITEM
           value: system.hostname
         ports:
-        - containerPort: 10049
+        - containerPort: 10050
           name: zabbix-agent
         volumeMounts:
         - name: localtime

@@ -74,8 +74,8 @@
         chdir: $HOME
         creates: gluster-service.txt
 
-    - name: create glusterfs-client pod test
-      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/glusterfs-pod.yaml > gluster-pod-test.txt"
-      args:
-        chdir: $HOME
-        creates: gluster-pod-test.txt
+#    - name: create glusterfs-client pod test
+#      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/glusterfs-pod.yaml > gluster-pod-test.txt"
+#      args:
+#        chdir: $HOME
+#        creates: gluster-pod-test.txt

@@ -4,8 +4,11 @@ netplan apply (se precisar reaplicar o DHCP)
 
 sudo su
 passwd
+
 vi /etc/ssh/sshd_config (PermitRootLogin yes)
 service sshd restart
+
+**Acessar agora por SSH
 
 *se precisar setar IP e Hostname
 echo ubuntu-<nome> > /etc/hostname
@@ -16,7 +19,7 @@ nano /etc/default/grub
 
 grub-mkconfig -o /boot/grub/grub.cfg
 
-vi etc/netplan/00-installer-config.yaml
+vi /etc/netplan/00-installer-config.yaml
 -----
 network:
   ethernets:

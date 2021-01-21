@@ -1,0 +1,64 @@
+- hosts: workers
+  become: yes
+  tasks:
+   - name: install haproxy
+     apt:
+       name: haproxy
+       state: present
+       update_cache: true
+
+   - name: install pacemaker
+     apt:
+       name: pacemaker
+       state: present
+       update_cache: true
+
+   - name: Start Corosync
+     service:
+       name: corosync.service
+       state: started
+
+   - name: Enable service Corosync
+     service:
+       name: corosync.service
+       enabled: yes
+
+   - name: Start Pacemaker
+     service:
+       name: pacemaker.service
+       state: started
+
+   - name: Enable service Pacemaker
+     service:
+       name: pacemaker.service
+       enabled: yes
+
+   #- name: "Build hosts file - Gluster"
+   #  lineinfile: dest=/etc/hosts regexp='.*{{ hostvars[item].gluster_hostname }}$' line="{{ hostvars[item].ansible_host }} {{ hostvars[item].gluster_hostname }}" state=present
+   #  when: hostvars[item].gluster_hostname is defined
+   #  with_items: "{{ groups['all'] }}"
+
+   #- name: install glusterfs-client
+   #  apt:
+   #    name: glusterfs-client
+   #    state: present
+
+#- hosts: ubuntu-workernode01
+#  become: yes
+#  tasks:
+#    - name: Gluster Probe
+#      shell: "gluster peer probe gluster1.local > probe.txt"
+#      args:
+#        chdir: $HOME
+#        creates: probe.txt
+
+#    - name: Create volume
+#      shell: "gluster volume create volume-infra replica 2 gluster0.local:/gfs/infra gluster1.local:/gfs/infra force > volume-infra.txt"
+#      args:
+#        chdir: $HOME
+#        creates: volume-infra.txt
+
+#    - name: Start volume
+#      shell: "gluster volume start volume-infra > start_volume.txt"
+#      args:
+#        chdir: $HOME

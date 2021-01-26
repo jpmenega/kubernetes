@@ -1,4 +1,4 @@
-- hosts: workers
+- hosts: all
   become: yes
   tasks:
    - name: install haproxy
@@ -13,6 +13,79 @@
        state: present
        update_cache: true
 
+   - name: install haveged
+     apt:
+       name: haveged
+       state: present
+       update_cache: true
+     when: hostvars[item].lb_primary is defined
+ 
+   - name: corosync-keygen
+      shell: "corosync-keygen > corosync-keygen.txt"
+      args:
+        chdir: $HOME
+        creates: corosync-keygen.txt
+     when: hostvars[item].lb_primary is defined
+
+   - name: Remove the apache package
+     apt:
+       name: haveged
+       state: absent
+     when: hostvars[item].lb_primary is defined
+
+#   - name: "Build hosts file - Gluster"
+#     lineinfile: dest=/etc/hosts regexp='.*{{ hostvars[item].gluster_hostname }}$' line="{{ hostvars[i
+#     when: hostvars[item].lb_primary is defined
+#     with_items: "{{ groups['all'] }}"
+
+- hosts: ubuntu-masternode02
+  become: yes
+  tasks:
+   - name: Create Corosync config folder
+     shell: "mkdir /etc/corosync > etc-corosync-folder.txt"
+     args:
+       chdir: $HOME
+       creates: etc-corosync-folder.txt
+
+   - name: Copy Corosync authkey
+     synchronize: src=/etc/corosync/authkey dest=/etc/corosync/authkey
+     delegate_to: ubuntu-masternode01
+
+
+- hosts: ubuntu-workernode02
+  become: yes
+  tasks:
+   - name: Create Corosync config folder
+     shell: "mkdir /etc/corosync > etc-corosync-folder.txt"
+     args:
+       chdir: $HOME
+       creates: etc-corosync-folder.txt
+
+   - name: Copy Corosync authkey
+     synchronize: src=/etc/corosync/authkey dest=/etc/corosync/authkey
+     delegate_to: ubuntu-workernode01
+
+- hosts: masters
+  become: yes
+  tasks:
+    - name: Download corosync.conf
+      shell: "wget xxxxxx/corosync.conf; mv corosync.conf /etc/corosync > wget-corosync-conf.txt"
+      args:
+       chdir: $HOME
+       creates: wget-corosync-conf.txt
+
+- hosts: workers
+  become: yes
+  tasks:
+    - name: Download corosync.conf
+      shell: "wget xxxxxx/corosync.conf; mv corosync.conf /etc/corosync > wget-corosync-conf.txt"
+      args:
+       chdir: $HOME
+       creates: wget-corosync-conf.txt
+
+- hosts: all
+  become: yes
+  tasks:
    - name: Start Corosync
      service:
        name: corosync.service
@@ -31,6 +104,16 @@
    - name: Enable service Pacemaker
      service:
        name: pacemaker.service
+       enabled: yes
+
+   - name: Start HAProxy
+     service:
+       name: haproxy.service
+       state: started
+
+   - name: Enable service HAProxy
+     service:
+       name: haproxy.service
        enabled: yes
 
    #- name: "Build hosts file - Gluster"

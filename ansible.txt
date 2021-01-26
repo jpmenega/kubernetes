@@ -47,6 +47,16 @@ mount /dev/sdb1 /gfs/infra
 make entry into /etc/fstab, so it mounts on reboot
 /dev/sdb1       /gfs/infra   ext4    defaults,nofail
 
+=======
+Permitir a copia da chave do Corosync de um node para os demais
+
+MasterNode01
+ssh-keygen
+ssh-copy-id root@<MasterNode02_IP>
+
+WorkerNode01
+ssh-keygen
+ssh-copy-id root@<WorkerNode02_IP>
 
 ============================
 Source script server pre req
@@ -61,6 +71,7 @@ cd ~/kube-cluster
 nano ~/kube-cluster/hosts (alterar IPs)
 
 ansible-playbook -i hosts ~/kube-cluster/main/initial.yml
+ansible-playbook -i hosts ~/kube-cluster/lb/loadbalancer.yml
 ansible-playbook -i hosts ~/kube-cluster/kubernetes/kube-dependencies.yml
 ansible-playbook -i hosts ~/kube-cluster/kubernetes/master.yml
 
@@ -76,4 +87,4 @@ ansible-playbook -i hosts ~/kube-cluster/gluster/glusterfs.yml
 
 --------------------
 Know issues:
-Zabbix nao consegue enviar msg para Slack: Precisa alterar o dominio do script da media de slack.com para slack.com. (isso ocorre por conta do ndots:5 inserido nos resolv.conf)
+zabbix nao consegue enviar msg para Slack: Precisa alterar o dominio do script da media de slack.com para slack.com. (isso ocorre por conta do ndots:5 inserido nos resolv.conf)

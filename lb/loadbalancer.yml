@@ -69,7 +69,7 @@
   become: yes
   tasks:
     - name: Download corosync.conf
-      shell: "wget xxxxxx/corosync.conf; mv corosync.conf /etc/corosync > wget-corosync-conf.txt"
+      shell: "wget https://raw.githubusercontent.com/jpmenega/kubernetes/main/lb/masters/corosync.conf; mv corosync.conf /etc/corosync > wget-corosync-conf.txt"
       args:
        chdir: $HOME
        creates: wget-corosync-conf.txt
@@ -78,7 +78,7 @@
   become: yes
   tasks:
     - name: Download corosync.conf
-      shell: "wget xxxxxx/corosync.conf; mv corosync.conf /etc/corosync > wget-corosync-conf.txt"
+      shell: "wget https://raw.githubusercontent.com/jpmenega/kubernetes/main/lb/workers/corosync.conf; mv corosync.conf /etc/corosync > wget-corosync-conf.txt"
       args:
        chdir: $HOME
        creates: wget-corosync-conf.txt
@@ -86,6 +86,12 @@
 - hosts: all
   become: yes
   tasks:
+   - name: Download haproxy heartbeat
+      shell: "wget https://raw.githubusercontent.com/jpmenega/kubernetes/main/lb/heartbeat/haproxy; mv haproxy /usr/lib/ocf/resource.d/heartbeat; chmod 755 /usr/lib/ocf/resource.d/heartbeat/haproxy > wget-heartbeat-conf.txt"
+      args:
+       chdir: $HOME
+       creates: wget-heartbeat-conf.txt
+
    - name: Start Corosync
      service:
        name: corosync.service

@@ -74,6 +74,12 @@
        chdir: $HOME
        creates: wget-corosync-conf.txt
 
+    - name: Download haproxy.cfg
+      shell: "wget https://raw.githubusercontent.com/jpmenega/kubernetes/main/lb/masters/haproxy.cfg; mv haproxy.cfg /etc/haproxy > wget-haproxy-cfg.txt"
+      args:
+       chdir: $HOME
+       creates: wget-haproxy-cfg.txt
+
 - hosts: workers
   become: yes
   tasks:
@@ -82,6 +88,12 @@
       args:
        chdir: $HOME
        creates: wget-corosync-conf.txt
+
+    - name: Download haproxy.cfg
+      shell: "wget https://raw.githubusercontent.com/jpmenega/kubernetes/main/lb/workers/haproxy.cfg; mv haproxy.cfg /etc/haproxy > wget-haproxy-cfg.txt"
+      args:
+       chdir: $HOME
+       creates: wget-haproxy-cfg.txt
 
 - hosts: all
   become: yes
@@ -122,32 +134,68 @@
        name: haproxy.service
        enabled: yes
 
-   #- name: "Build hosts file - Gluster"
-   #  lineinfile: dest=/etc/hosts regexp='.*{{ hostvars[item].gluster_hostname }}$' line="{{ hostvars[item].ansible_host }} {{ hostvars[item].gluster_hostname }}" state=present
-   #  when: hostvars[item].gluster_hostname is defined
-   #  with_items: "{{ groups['all'] }}"
+- hosts: ubuntu-masternode01
+  become: yes
+  tasks:
+    - name: Configure pacemaker step 1
+      shell: "crm configure property stonith-enabled=false > crm1.txt"
+      args:
+       chdir: $HOME
+       creates: crm1.txt
 
-   #- name: install glusterfs-client
-   #  apt:
-   #    name: glusterfs-client
-   #    state: present
+    - name: Configure pacemaker step 2
+      shell: "crm configure property no-quorum-policy=ignore > crm2.txt"
+      args:
+       chdir: $HOME
+       creates: crm2.txt
 
-#- hosts: ubuntu-workernode01
-#  become: yes
-#  tasks:
-#    - name: Gluster Probe
-#      shell: "gluster peer probe gluster1.local > probe.txt"
-#      args:
-#        chdir: $HOME
-#        creates: probe.txt
+    - name: Configure pacemaker step 3
+      shell: "crm configure primitive VIP ocf:heartbeat:IPaddr2 params ip=/"192.168.1.249/" cidr_netmask=/"24/" nic=/"eth0/" op monitor interval=/"10s/" meta migration-threshold=/"10/" > crm3.txt"
+      args:
+       chdir: $HOME
+       creates: crm3.txt
 
-#    - name: Create volume
-#      shell: "gluster volume create volume-infra replica 2 gluster0.local:/gfs/infra gluster1.local:/gfs/infra force > volume-infra.txt"
-#      args:
-#        chdir: $HOME
-#        creates: volume-infra.txt
+    - name: Configure pacemaker step 4
+      shell: "crm configure primitive haproxyLB ocf:heartbeat:haproxy params conffile=/etc/haproxy/haproxy.cfg op monitor interval=10s timeout=60s op start timeout=30s interval=0 op stop timeout=30s interval=0 meta migration-threshold=10 > crm4.txt"
+      args:
+       chdir: $HOME
+       creates: crm4.txt
 
-#    - name: Start volume
-#      shell: "gluster volume start volume-infra > start_volume.txt"
-#      args:
-#        chdir: $HOME
+    - name: Configure pacemaker step 5
+      shell: "crm configure group grp_balancing VIP haproxyLB > crm5.txt
+      args:
+       chdir: $HOME
+       creates: crm5.txt
+
+- hosts: ubuntu-workernode01
+  become: yes
+  tasks:
+    - name: Configure pacemaker step 1
+      shell: "crm configure property stonith-enabled=false > crm1.txt"
+      args:
+       chdir: $HOME
+       creates: crm1.txt
+
+    - name: Configure pacemaker step 2
+      shell: "crm configure property no-quorum-policy=ignore > crm2.txt"
+      args:
+       chdir: $HOME
+       creates: crm2.txt
+
+    - name: Configure pacemaker step 3
+      shell: "crm configure primitive VIP ocf:heartbeat:IPaddr2 params ip=/"192.168.1.250/" cidr_netmask=/"24/" nic=/"eth0/" op monitor interval=/"10s/" meta migration-threshold=/"10/" > crm3.txt"
+      args:
+       chdir: $HOME
+       creates: crm3.txt
+
+    - name: Configure pacemaker step 4
+      shell: "crm configure primitive haproxyLB ocf:heartbeat:haproxy params conffile=/etc/haproxy/haproxy.cfg op monitor interval=10s timeout=60s op start timeout=30s interval=0 op stop timeout=30s interval=0 meta migration-threshold=10 > crm4.txt"
+      args:
+       chdir: $HOME
+       creates: crm4.txt
+
+    - name: Configure pacemaker step 5
+      shell: "crm configure group grp_balancing VIP haproxyLB > crm5.txt
+      args:
+       chdir: $HOME
+       creates: crm5.txt

@@ -84,6 +84,7 @@ ssh ubuntu@master_ip
 kubectl get nodes
 
 ansible-playbook -i hosts ~/kube-cluster/gluster/glusterfs.yml
+ansible-playbook -i hosts ~/kube-cluster/zabbix/zabbix.yml
 
 --------------------
 Know issues:

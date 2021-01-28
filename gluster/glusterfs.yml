@@ -58,21 +58,21 @@
         chdir: $HOME
         creates: start_volume.txt
 
-- hosts: masters
-  become: yes
-  become_user: ubuntu
-  tasks:
-    - name: create glusterfs-client endpoint
-      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/glusterfs-endpoints.yaml > gluster-endpoint.txt"
-      args:
-        chdir: $HOME
-        creates: gluster-endpoint.txt
+#- hosts: masters
+#  become: yes
+#  become_user: ubuntu
+#  tasks:
+#    - name: create glusterfs-client endpoint
+#      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/glusterfs-endpoints.yaml > gluster-endpoint.txt"
+#      args:
+#        chdir: $HOME
+#        creates: gluster-endpoint.txt
 
-    - name: create glusterfs-client service
-      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/glusterfs-service.yaml > gluster-service.txt"
-      args:
-        chdir: $HOME
-        creates: gluster-service.txt
+#    - name: create glusterfs-client service
+#      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/glusterfs-service.yaml > gluster-service.txt"
+#      args:
+#        chdir: $HOME
+#        creates: gluster-service.txt
 
 #    - name: create glusterfs-client pod test
 #      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/glusterfs-pod.yaml > gluster-pod-test.txt"

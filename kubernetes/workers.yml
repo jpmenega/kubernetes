@@ -6,9 +6,17 @@
       shell: kubeadm token create --print-join-command
       register: join_command_raw
 
+    - name: get key
+      shell: kubeadm certs certificate-key
+      register: join_key_raw
+
+    - name: set key
+      set_fact:
+        join_key: "{{ join_key_raw.stdout_lines[0] }}"
+
     - name: set join command
       set_fact:
-        join_command: "{{ join_command_raw.stdout_lines[0] }}"
+        join_command: "{{ join_command_raw.stdout_lines[0] }} --certificate-key {{ join_key_raw.stdout_lines[0] }}"
 
 
 - hosts: workers

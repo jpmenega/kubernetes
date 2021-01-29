@@ -125,15 +125,15 @@
        name: pacemaker.service
        enabled: yes
 
-   - name: Start HAProxy
-     service:
-       name: haproxy.service
-       state: started
+#   - name: Start HAProxy
+#     service:
+#       name: haproxy.service
+#       state: started
 
-   - name: Enable service HAProxy
-     service:
-       name: haproxy.service
-       enabled: yes
+#   - name: Enable service HAProxy
+#     service:
+#       name: haproxy.service
+#       enabled: yes
 
 - hosts: masters
   become: yes

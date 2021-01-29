@@ -149,7 +149,7 @@ haproxy_start()
 		COMMAND="/usr/sbin/haproxy"
 	fi
 
-	$COMMAND $OCF_RESKEY_extraconf -f $CONF_FILE -p $PIDFILE;
+	$COMMAND $OCF_RESKEY_extraconf -f $CONF_FILE -p $PIDFILE -D;
 	if [ $? -ne 0 ]; then
 		ocf_log err "Error. haproxy daemon returned error $?."
 		exit $OCF_ERR_GENERIC

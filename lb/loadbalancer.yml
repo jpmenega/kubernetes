@@ -72,17 +72,17 @@
   become: yes
   tasks:
     - name: Create Corosync config folder
-     file:
-       path: /etc/corosync
-       state: directory
-     when: lb_slave == "yes"
-     with_items: "{{ lb_slave | default([]) }}"
+      file:
+        path: /etc/corosync
+        state: directory
+      when: lb_slave == "yes"
+      with_items: "{{ lb_slave | default([]) }}"
 
-   - name: Copy Corosync authkey
-     synchronize: src=/etc/corosync/authkey dest=/etc/corosync/authkey
-     delegate_to: ubuntu-workernode01
-     when: lb_slave == "yes"
-     with_items: "{{ lb_slave | default([]) }}"
+    - name: Copy Corosync authkey
+      synchronize: src=/etc/corosync/authkey dest=/etc/corosync/authkey
+      delegate_to: ubuntu-workernode01
+      when: lb_slave == "yes"
+      with_items: "{{ lb_slave | default([]) }}"
 
     - name: Download corosync.conf
       shell: "wget https://raw.githubusercontent.com/jpmenega/kubernetes/main/lb/workers/corosync.conf; mv corosync.conf /etc/corosync > wget-corosync-conf.txt"
@@ -108,7 +108,7 @@
    - name: Start Corosync
      service:
        name: corosync.service
-       state: started
+       state: restarted
 
    - name: Enable service Corosync
      service:
@@ -118,22 +118,22 @@
    - name: Start Pacemaker
      service:
        name: pacemaker.service
-       state: started
+       state: restarted
 
    - name: Enable service Pacemaker
      service:
        name: pacemaker.service
        enabled: yes
 
-#   - name: Start HAProxy
-#     service:
-#       name: haproxy.service
-#       state: started
+   - name: Start HAProxy
+     service:
+       name: haproxy.service
+       state: stopped
 
-#   - name: Enable service HAProxy
-#     service:
-#       name: haproxy.service
-#       enabled: yes
+   - name: Enable service HAProxy
+     service:
+       name: haproxy.service
+       enabled: no
 
 - hosts: masters
   become: yes
@@ -178,6 +178,14 @@
       when: lb_primary == "yes"
       with_items: "{{ lb_primary | default([]) }}"
 
+    - name: Remove default node1
+      shell: "crm_node -R node1 --force > crm6.txt"
+      args:
+       chdir: $HOME
+       creates: crm6.txt
+      when: lb_primary == "yes"
+      with_items: "{{ lb_primary | default([]) }}"
+
 - hosts: workers
   become: yes
   tasks:
@@ -218,5 +226,13 @@
       args:
        chdir: $HOME
        creates: crm5.txt
+      when: lb_primary == "yes"
+      with_items: "{{ lb_primary | default([]) }}"
+
+    - name: Remove default node1
+      shell: "crm_node -R node1 --force > crm6.txt"
+      args:
+       chdir: $HOME
+       creates: crm6.txt
       when: lb_primary == "yes"
       with_items: "{{ lb_primary | default([]) }}"

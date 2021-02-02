@@ -18,7 +18,7 @@ spec:
       containers:
       - image: nginx
         name: fs-client
-        command: ["sh", "-c", "mkdir -p /mnt/infra/zabbix/var/lib/mysql; /docker-entrypoint.sh"]
+        command: ["sh", "-c", "/docker-entrypoint.sh"]
         volumeMounts:
         - name: mysql-persistent-storage
           mountPath: /mnt/infra

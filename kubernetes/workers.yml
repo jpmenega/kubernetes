@@ -10,6 +10,9 @@
       shell: kubeadm certs certificate-key
       register: join_key_raw
 
+    - name: upload new certificate and key
+      shell: kubeadm init phase upload-certs --upload-certs --certificate-key {{ join_key_raw.stdout_lines[0] }}
+
     - name: set key
       set_fact:
         join_key: "{{ join_key_raw.stdout_lines[0] }}"

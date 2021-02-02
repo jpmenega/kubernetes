@@ -20,6 +20,12 @@
         chdir: $HOME
         creates: zabbix-gluster-service.txt
 
+    - name: create filesystem pod
+      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/zabbix/kube-filesystem.yaml > zabbix-filesystem.txt"
+      args:
+        chdir: $HOME
+        creates: zabbix-filesystem.txt
+
     - name: create database pod
       shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/zabbix/kube-database.yaml > zabbix-database.txt"
       args:

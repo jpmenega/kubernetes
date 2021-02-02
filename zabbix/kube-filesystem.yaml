@@ -20,10 +20,10 @@ spec:
         name: fs-client
         volumeMounts:
         - name: mysql-persistent-storage
-          mountPath: /mnt/mysql
+          mountPath: /mnt/infra
       volumes:
       - name: mysql-persistent-storage
         glusterfs:
           endpoints: glusterfs-cluster
-          path: volume-infra/zabbix/var/lib/mysql
+          path: volume-infra
           readOnly: false

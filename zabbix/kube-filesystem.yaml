@@ -16,7 +16,7 @@ spec:
         app: fs-client
     spec:
       containers:
-      - image: jpmenegatti/fssupport:v1
+      - image: jpmenegatti/fssupport:v2
         name: fs-client
         #command: ["bash", "-c", "/'docker-entrypoint.sh'"]
         volumeMounts:

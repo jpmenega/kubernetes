@@ -1,6 +1,7 @@
 [masters]
 ubuntu-masternode01 ansible_host=192.168.1.241 ansible_user=root lb_primary=yes
 ubuntu-masternode02 ansible_host=192.168.1.242 ansible_user=root lb_slave=yes
+ubuntu-masternode03 ansible_host=192.168.1.245 ansible_user=root lb_slave=yes
 
 [workers]
 ubuntu-workernode01 ansible_host=192.168.1.243 ansible_user=root gluster_hostname=gluster0.local lb_primary=yes

@@ -29,3 +29,54 @@
       lineinfile: dest=/etc/hosts regexp='.*{{ item }}$' line="{{ hostvars[item].ansible_host }} {{item}}.{{ domain_name }} {{item}}" state=present
       when: hostvars[item].ansible_host is defined
       with_items: "{{ groups['all'] }}"
+
+    - name: "Install zabbix-agent"
+      apt:
+       name: zabbix-agent
+       state: present
+       update_cache: true
+
+    - name: "Configure Zabbix Agent"
+      copy:
+        dest: /etc/zabbix/zabbix_agentd.conf
+        mode: u=rwx,g=rx,o=rx
+        owner: zabbix
+        content: |
+            LogFile=/tmp/zabbix_agentd.log
+            Server=192.168.1.252,192.168.1.243,192.168.1.244
+            Hostname={{ item }}
+
+- hosts: workers
+  become: yes
+  tasks:
+    - name: gluster-monitoring.pl
+      shell: "wget https://raw.githubusercontent.com/jpmenega/kubernetes/main/main/zabbix-agent/gluster-monitoring.pl"
+      args:
+        chdir: /etc/zabbix
+        creates: gluster-monitoring.pl
+
+    - name: "gluster-monitoring.pl permission"
+      copy:
+        dest: /etc/zabbix/gluster-monitoring.pl
+        state: touch
+        mode: u=rwx,g=rx,o=rx
+
+    - name: gluster.conf
+      shell: "wget https://raw.githubusercontent.com/jpmenega/kubernetes/main/main/zabbix-agent/gluster.conf"
+      args:
+        chdir: /etc/zabbix/zabbix_agentd.conf.d
+        creates: gluster.conf
+
+    - name: zabbix sudoer
+      shell: "wget https://raw.githubusercontent.com/jpmenega/kubernetes/main/main/zabbix-agent/zabbix"
+      args:
+        chdir: /etc/sudoers.d/
+        creates: zabbix
+
+- hosts: all
+  become: yes
+  tasks:
+    - name: Restart zabbix-agent
+     service:
+       name: zabbix-agent.service
+       state: restarted

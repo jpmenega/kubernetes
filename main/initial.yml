@@ -39,12 +39,13 @@
     - name: "Configure Zabbix Agent"
       copy:
         dest: /etc/zabbix/zabbix_agentd.conf
-        mode: u=rwx,g=rx,o=rx
+        mode: u=rw,g=r,o=r
         owner: zabbix
         content: |
             LogFile=/tmp/zabbix_agentd.log
             Server=192.168.1.252,192.168.1.243,192.168.1.244
-            Hostname={{ item }}
+            Include=/etc/zabbix/zabbix_agentd.conf.d/
+            Hostname={{ ansible_hostname }}
 
 - hosts: workers
   become: yes
@@ -56,8 +57,8 @@
         creates: gluster-monitoring.pl
 
     - name: "gluster-monitoring.pl permission"
-      copy:
-        dest: /etc/zabbix/gluster-monitoring.pl
+      file:
+        path: /etc/zabbix/gluster-monitoring.pl
         state: touch
         mode: u=rwx,g=rx,o=rx
 
@@ -73,10 +74,16 @@
         chdir: /etc/sudoers.d/
         creates: zabbix
 
+    - name: "Install libswitch-perl"
+      apt:
+       name: libswitch-perl
+       state: present
+       update_cache: true
+
 - hosts: all
   become: yes
   tasks:
     - name: Restart zabbix-agent
-     service:
-       name: zabbix-agent.service
-       state: restarted
+      service:
+        name: zabbix-agent.service
+        state: restarted

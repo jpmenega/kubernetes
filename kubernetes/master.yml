@@ -90,4 +90,11 @@
         owner: ubuntu
       when: lb_slave == "yes"
       with_items: "{{ lb_slave | default([]) }}"
-
+    
+    - name: taint NoSchedule cluster
+      shell: "kubectl taint nodes --all node-role.kubernetes.io/master-node/k8s-all-in-one untainted >> taint.txt"
+      args:
+        chdir: $HOME
+        creates: taint.txt
+      when: lb_primary == "yes" and taint == "yes"
+      with_items: "{{ (lb_primary | default([])) and (taint | default([])) }}

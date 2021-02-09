@@ -47,42 +47,46 @@
             Include=/etc/zabbix/zabbix_agentd.conf.d/
             Hostname={{ ansible_hostname }}
 
-- hosts: workers
-  become: yes
-  tasks:
     - name: gluster-monitoring.pl
       shell: "wget https://raw.githubusercontent.com/jpmenega/kubernetes/main/main/zabbix-agent/gluster-monitoring.pl"
       args:
         chdir: /etc/zabbix
         creates: gluster-monitoring.pl
+      when: gluster == "yes"
+      with_items: "{{ gluster | default([]) }}"
 
     - name: "gluster-monitoring.pl permission"
       file:
         path: /etc/zabbix/gluster-monitoring.pl
         state: touch
         mode: u=rwx,g=rx,o=rx
+      when: gluster == "yes"
+      with_items: "{{ gluster | default([]) }}"
 
     - name: gluster.conf
       shell: "wget https://raw.githubusercontent.com/jpmenega/kubernetes/main/main/zabbix-agent/gluster.conf"
       args:
         chdir: /etc/zabbix/zabbix_agentd.conf.d
         creates: gluster.conf
+      when: gluster == "yes"
+      with_items: "{{ gluster | default([]) }}"
 
     - name: zabbix sudoer
       shell: "wget https://raw.githubusercontent.com/jpmenega/kubernetes/main/main/zabbix-agent/zabbix"
       args:
         chdir: /etc/sudoers.d/
         creates: zabbix
+      when: gluster == "yes"
+      with_items: "{{ gluster | default([]) }}"
 
     - name: "Install libswitch-perl"
       apt:
        name: libswitch-perl
        state: present
        update_cache: true
+      when: gluster == "yes"
+      with_items: "{{ gluster | default([]) }}"
 
-- hosts: all
-  become: yes
-  tasks:
     - name: Restart zabbix-agent
       service:
         name: zabbix-agent.service

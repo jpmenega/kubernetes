@@ -1,4 +1,4 @@
-- hosts: workers
+- hosts: all
   become: yes
   tasks:
    - name: install software-properties-common
@@ -6,76 +6,85 @@
        name: software-properties-common
        state: present
        update_cache: true
+     when: gluster == "yes"
+     with_items: "{{ gluster | default([]) }}"
 
    - name: Add Gluster repository from PPA
      apt_repository:
        repo: 'ppa:gluster/glusterfs-8'
        state: present
+     when: gluster == "yes"
+     with_items: "{{ gluster | default([]) }}"
 
    - name: install glusterfs-server
      apt:
        name: glusterfs-server
        state: present
+     when: gluster == "yes"
+     with_items: "{{ gluster | default([]) }}"
    
    - name: Start Gluster
      service:
        name: glusterd.service
        state: started
+     when: gluster == "yes"
+     with_items: "{{ gluster | default([]) }}"
 
    - name: Enable service Guster
      service:
        name: glusterd.service
        enabled: yes
+     when: gluster == "yes"
+     with_items: "{{ gluster | default([]) }}"
 
-   - name: "Build hosts file - Gluster"
-     lineinfile: dest=/etc/hosts regexp='.*{{ hostvars[item].gluster_hostname }}$' line="{{ hostvars[item].ansible_host }} {{ hostvars[item].gluster_hostname }}" state=present
-     when: hostvars[item].gluster_hostname is defined
-     with_items: "{{ groups['all'] }}"
+   #- name: "Build hosts file - Gluster"
+   #  lineinfile: dest=/etc/hosts regexp='.*{{ hostvars[item].gluster_hostname }}$' line="{{ hostvars[item].ansible_host }} {{ hostvars[item].gluster_hostname }}" state=present
+   #  when: hostvars[item].gluster_hostname is defined
+   #  with_items: "{{ groups['all'] }}"
 
    #- name: install glusterfs-client
    #  apt:
    #    name: glusterfs-client
    #    state: present
 
-- hosts: ubuntu-workernode01
+- hosts: all
   become: yes
   tasks:
     - name: Gluster Probe
-      shell: "gluster peer probe gluster1.local > probe.txt"
+      shell: "gluster peer probe {{ ansible_hostname }} > probe.txt"
       args:
         chdir: $HOME
         creates: probe.txt
+      when: gluster == "yes" and lb_primary == "yes"
+      with_items: "{{ (gluster | default([])) and (lb_primary | default([])) }}"
 
     - name: Create volume
-      shell: "gluster volume create volume-infra replica 2 gluster0.local:/gfs/infra gluster1.local:/gfs/infra force > volume-infra.txt"
+      shell: "gluster volume create volume-infra replica 3 ubuntu-masternode01:/gfs/infra ubuntu-masternode02:/gfs/infra ubuntu-masternode03:/gfs/infra force > volume-infra.txt"
       args:
         chdir: $HOME
         creates: volume-infra.txt
+      when: gluster == "yes" and lb_primary == "yes"
+      with_items: "{{ (gluster | default([])) and (lb_primary | default([])) }}"
 
+- hosts: workers
+  become: yes
+  tasks:
+    - name: Create volume
+      shell: "gluster volume create volume-infra replica 2 ubuntu-workernode01:/gfs/infra ubuntu-workernode02:/gfs/infra force > volume-infra.txt"
+      args:
+        chdir: $HOME
+        creates: volume-infra.txt
+      when: gluster == "yes" and lb_primary == "yes"
+      with_items: "{{ (gluster | default([])) and (lb_primary | default([])) }}"
+
+
+- hosts: all
+  become: yes
+  tasks:
     - name: Start volume
       shell: "gluster volume start volume-infra > start_volume.txt"
       args:
         chdir: $HOME
         creates: start_volume.txt
-
-#- hosts: masters
-#  become: yes
-#  become_user: ubuntu
-#  tasks:
-#    - name: create glusterfs-client endpoint
-#      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/glusterfs-endpoints.yaml > gluster-endpoint.txt"
-#      args:
-#        chdir: $HOME
-#        creates: gluster-endpoint.txt
-
-#    - name: create glusterfs-client service
-#      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/glusterfs-service.yaml > gluster-service.txt"
-#      args:
-#        chdir: $HOME
-#        creates: gluster-service.txt
-
-#    - name: create glusterfs-client pod test
-#      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/glusterfs-pod.yaml > gluster-pod-test.txt"
-#      args:
-#        chdir: $HOME
-#        creates: gluster-pod-test.txt
+      when: gluster == "yes" and lb_primary == "yes"
+      with_items: "{{ (gluster | default([])) and (lb_primary | default([])) }}"

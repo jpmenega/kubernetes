@@ -5,10 +5,14 @@ metadata:
   namespace: zabbix
 subsets:
 - addresses:
-  - ip: 192.168.1.244
+  - ip: 192.168.1.241
   ports:
   - port: 1
 - addresses:
-  - ip: 192.168.1.245
+  - ip: 192.168.1.242
+  ports:
+  - port: 1
+- addresses:
+  - ip: 192.168.1.243
   ports:
   - port: 1

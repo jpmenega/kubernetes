@@ -4,8 +4,8 @@ ubuntu-masternode02 ansible_host=192.168.1.242 ansible_user=root lb_slave=yes no
 ubuntu-masternode03 ansible_host=192.168.1.243 ansible_user=root lb_slave=yes notaint=yes
 
 #[workers]
-#ubuntu-workernode01 ansible_host=192.168.1.244 ansible_user=root gluster_hostname=gluster0.local lb_primary=yes
-#ubuntu-workernode02 ansible_host=192.168.1.245 ansible_user=root gluster_hostname=gluster1.local lb_slave=yes
+ubuntu-workernode01 ansible_host=192.168.1.244 ansible_user=root gluster=yes lb_primary=yes
+ubuntu-workernode02 ansible_host=192.168.1.245 ansible_user=root gluster=yes lb_slave=yes
 
 [all:vars]
 ansible_python_interpreter=/usr/bin/python3

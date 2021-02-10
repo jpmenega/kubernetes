@@ -5,8 +5,7 @@ metadata:
   namespace: zabbix
 spec:
   ports:
-    - port: 8089
-    - targetPort: 80
+    - port: 80
   selector:
     app: fs-client
   clusterIP: None

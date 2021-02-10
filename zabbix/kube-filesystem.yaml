@@ -33,6 +33,8 @@ spec:
       containers:
       - image: jpmenegatti/fssupport:v2
         name: fs-client
+        ports:
+        - containerPort: 80
         #command: ["bash", "-c", "/'docker-entrypoint.sh'"]
         volumeMounts:
         - name: mysql-persistent-storage

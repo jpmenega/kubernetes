@@ -9,10 +9,20 @@
         creates: zabbix-namespace.txt
 
     - name: create glusterfs-endpoints
-      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/zabbix/glusterfs-endpoints.yaml > zabbix-gluster-endpoints"
+      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/zabbix/glusterfs-endpoints.yaml > zabbix-gluster-endpoints.txt"
       args:
         chdir: $HOME
         creates: zabbix-gluster-endpoints.txt
+      when: notaint == "yes"
+      with_items: "{{ notaint | default([]) }}"
+
+    - name: create glusterfs-endpoints (taint)
+      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/zabbix/glusterfs-endpoints-taint.yaml > zabbix-gluster-endpoints-taint.txt"
+      args:
+        chdir: $HOME
+        creates: zabbix-gluster-endpoints-taint.txt
+      when: taint == "yes"
+      with_items: "{{ taint | default([]) }}"
 
     - name: create glusterfs-client service
       shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/zabbix/glusterfs-service.yaml > zabbix-gluster-service.txt"

@@ -92,7 +92,9 @@
       with_items: "{{ lb_slave | default([]) }}"
     
     - name: taint NoSchedule cluster
-      shell: "kubectl taint nodes --all node-role.kubernetes.io/master-node/k8s-all-in-one untainted >> taint.txt"
+      become: yes
+      become_user: ubuntu
+      shell: "kubectl taint nodes --all node-role.kubernetes.io/master- >> taint.txt"
       args:
         chdir: $HOME
         creates: taint.txt

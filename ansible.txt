@@ -48,7 +48,7 @@ mkfs -t ext4 /dev/sdb1 (or vdb1)
 mkdir -p /gfs/infra
 mount /dev/sdb1 /gfs/infra
 
-make entry into /etc/fstab, so it mounts on reboot
+vi /etc/fstab
 /dev/sdb1       /gfs/infra   ext4    defaults,nofail
 
 =======

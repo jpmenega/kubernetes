@@ -30,7 +30,7 @@
      when: gluster == "yes"
      with_items: "{{ gluster | default([]) }}"
 
-   - name: Enable service Guster
+   - name: Enable service Gluster
      service:
        name: glusterd.service
        enabled: yes
@@ -51,12 +51,13 @@
   become: yes
   tasks:
     - name: Gluster Probe
-      shell: "gluster peer probe {{ ansible_hostname }} > probe.txt"
+      shell: "gluster peer probe {{ ansible_hostname }} > probe-{{ ansible_hostname }}.txt"
       args:
         chdir: $HOME
-        creates: probe.txt
-      when: gluster == "yes" and lb_primary == "yes"
-      with_items: "{{ (gluster | default([])) and (lb_primary | default([])) }}"
+        creates: probe-{{ ansible_hostname }}.txt
+      delegate_to: ubuntu-masternode01
+      when: gluster == "yes" and lb_slave == "yes"
+      with_items: "{{ (gluster | default([])) and (lb_slave | default([])) }}"
 
     - name: Create volume
       shell: "gluster volume create volume-infra replica 3 ubuntu-masternode01:/gfs/infra ubuntu-masternode02:/gfs/infra ubuntu-masternode03:/gfs/infra force > volume-infra.txt"

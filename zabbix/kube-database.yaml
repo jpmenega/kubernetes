@@ -47,6 +47,10 @@ spec:
       labels:
         app: mysql-server
     spec:
+      initContainers:
+      - name: init-wait
+        image: alpine
+        command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 fs-client 8089 && exit 0 || sleep 3; done; exit 1"]
       containers:
       - image: mysql:8.0
         name: mysql-server

@@ -29,6 +29,10 @@ spec:
       labels:
         app: zabbix-server
     spec:
+      initContainers:
+      - name: init-wait
+        image: alpine
+        command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 mysql-server 3306 && exit 0 || sleep 3; d
       containers:
       - image: zabbix/zabbix-server-mysql:alpine-5.2-latest
         name: zabbix-server

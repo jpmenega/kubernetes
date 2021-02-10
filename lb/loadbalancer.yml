@@ -41,11 +41,11 @@
 #     with_items: "{{ groups['all'] }}"
 
    - name: Create Corosync config folder
-      file:
-        path: /etc/corosync
-        state: directory
-      when: lb_slave == "yes"
-      with_items: "{{ lb_slave | default([]) }}"
+     file:
+       path: /etc/corosync
+       state: directory
+     when: lb_slave == "yes"
+     with_items: "{{ lb_slave | default([]) }}"
 
 - hosts: masters
   become: yes
@@ -119,6 +119,16 @@
       chdir: $HOME
       creates: wget-heartbeat-conf.txt
 
+   - name: Start HAProxy
+     service:
+       name: haproxy.service
+       state: stopped
+
+   - name: Enable service HAProxy
+     service:
+       name: haproxy.service
+       enabled: no
+
    - name: Start Corosync
      service:
        name: corosync.service
@@ -138,16 +148,6 @@
      service:
        name: pacemaker.service
        enabled: yes
-
-   - name: Start HAProxy
-     service:
-       name: haproxy.service
-       state: stopped
-
-   - name: Enable service HAProxy
-     service:
-       name: haproxy.service
-       enabled: no
 
 - hosts: masters
   become: yes
@@ -197,7 +197,7 @@
       args:
        chdir: $HOME
        creates: crm5.txt
-      when: lb_primary == "yes" and notaint="yes"
+      when: lb_primary == "yes" and notaint == "yes"
       with_items: "{{ (lb_primary | default([])) and (notaint | default([])) }}"
 
     - name: Configure pacemaker step 5
@@ -205,7 +205,7 @@
       args:
        chdir: $HOME
        creates: crm5.txt
-      when: lb_primary == "yes" and taint="yes"
+      when: lb_primary == "yes" and taint == "yes"
       with_items: "{{ (lb_primary | default([])) and (taint | default([])) }}"
 
     - name: Remove default node1

@@ -97,4 +97,4 @@
         chdir: $HOME
         creates: taint.txt
       when: lb_primary == "yes" and taint == "yes"
-      with_items: "{{ (lb_primary | default([])) and (taint | default([])) }}
+      with_items: "{{ (lb_primary | default([])) and (taint | default([])) }}"

@@ -1,9 +1,10 @@
 ===========================
 Node server pre req
-netplan apply (se precisar reaplicar o DHCP)
-
 sudo su
 passwd
+
+ip addr show
+netplan apply (se precisar reaplicar o DHCP)
 
 vi /etc/ssh/sshd_config (PermitRootLogin yes)
 service sshd restart
@@ -44,8 +45,7 @@ ssh-copy-id root@<demais_nodes_do_grupo_IP>
 *Worker nodes for GlusterFS
 cfdisk /dev/sdb (or vdb)
 mkfs -t ext4 /dev/sdb1 (or vdb1)
-mkdir /gfs
-mkdir /gfs/infra
+mkdir -p /gfs/infra
 mount /dev/sdb1 /gfs/infra
 
 make entry into /etc/fstab, so it mounts on reboot

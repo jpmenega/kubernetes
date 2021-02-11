@@ -89,3 +89,41 @@
         creates: start_volume.txt
       when: gluster == "yes" and lb_primary == "yes"
       with_items: "{{ (gluster | default([])) and (lb_primary | default([])) }}"
+
+- hosts: ubuntu-masternode01
+  become: yes
+  become_user: ubuntu
+  tasks:
+    - name: create namespace
+      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/glusterfs-ns.yaml > gluster-namespace.txt"
+      args:
+        chdir: $HOME
+        creates: gluster-namespace.txt
+
+    - name: create glusterfs-endpoints
+      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/glusterfs-endpoints.yaml > gluster-endpoints.txt"
+      args:
+        chdir: $HOME
+        creates: gluster-endpoints.txt
+      when: notaint == "yes"
+      with_items: "{{ notaint | default([]) }}"
+
+    - name: create glusterfs-endpoints (taint)
+      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/glusterfs-endpoint-taint.yaml > gluster-endpoint-taint.txt"
+      args:
+        chdir: $HOME
+        creates: gluster-endpoints-taint.txt
+      when: taint == "yes"
+      with_items: "{{ taint | default([]) }}"
+
+    - name: create glusterfs-client service
+      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/glusterfs-service.yaml > gluster-service.txt"
+      args:
+        chdir: $HOME
+        creates: gluster-service.txt
+
+    - name: create filesystem pod
+      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/zabbix-fs.yaml > zabbix-fs.txt"
+      args:
+        chdir: $HOME
+        creates: zabbix-fs.txt

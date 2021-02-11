@@ -1,8 +1,8 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: fs-client
-  namespace: zabbix
+  name: zabbix-fs
+  namespace: glusterfs
 spec:
   ports:
     - port: 80
@@ -15,23 +15,23 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: fs-client
-  namespace: zabbix
+  name: zabbix-fs
+  namespace: glusterfs
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: fs-client
+      app: zabbix-fs
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: fs-client
+        app: zabbix-fs
     spec:
       containers:
       - image: jpmenegatti/fssupport:v2
-        name: fs-client
+        name: zabbix-fs
         ports:
         - containerPort: 80
         #command: ["bash", "-c", "/'docker-entrypoint.sh'"]

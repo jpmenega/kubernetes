@@ -109,14 +109,14 @@
       with_items: "{{ notaint | default([]) }}"
 
     - name: create glusterfs-endpoints (taint)
-      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/glusterfs-endpoint-taint.yaml > gluster-endpoint-taint.txt"
+      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/glusterfs-endpoints-taint.yaml > gluster-endpoint-taint.txt"
       args:
         chdir: $HOME
         creates: gluster-endpoints-taint.txt
       when: taint == "yes"
       with_items: "{{ taint | default([]) }}"
 
-    - name: create glusterfs-client service
+    - name: create glusterfs-service
       shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/glusterfs-service.yaml > gluster-service.txt"
       args:
         chdir: $HOME

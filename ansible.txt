@@ -51,17 +51,6 @@ mount /dev/sdb1 /gfs/infra
 vi /etc/fstab
 /dev/sdb1       /gfs/infra   ext4    defaults,nofail
 
-=======
-Permitir a copia da chave do Corosync de um node para os demais
-
-MasterNode01
-ssh-keygen
-ssh-copy-id root@<MasterNode02_IP>
-
-WorkerNode01
-ssh-keygen
-ssh-copy-id root@<WorkerNode02_IP>
-
 ============================
 Source script server pre req
 apt install ansible

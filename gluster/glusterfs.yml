@@ -59,7 +59,7 @@
       when: gluster == "yes" and lb_slave == "yes"
       with_items: "{{ (gluster | default([])) and (lb_slave | default([])) }}"
 
-    - name: Create volume
+    - name: Create volume infra
       shell: "gluster volume create volume-infra replica 3 ubuntu-masternode01:/gfs/infra ubuntu-masternode02:/gfs/infra ubuntu-masternode03:/gfs/infra force > volume-infra.txt"
       args:
         chdir: $HOME
@@ -67,10 +67,18 @@
       when: gluster == "yes" and lb_primary == "yes"
       with_items: "{{ (gluster | default([])) and (lb_primary | default([])) }}"
 
+    - name: Create volume Samba
+      shell: "gluster volume create volume-samba replica 3 ubuntu-masternode01:/gfs/samba ubuntu-masternode02:/gfs/samba ubuntu-masternode03:/gfs/samba force > volume-samba.txt"
+      args:
+        chdir: $HOME
+        creates: volume-samba.txt
+      when: gluster == "yes" and lb_primary == "yes"
+      with_items: "{{ (gluster | default([])) and (lb_primary | default([])) }}"
+
 - hosts: workers
   become: yes
   tasks:
-    - name: Create volume
+    - name: Create volume infra
       shell: "gluster volume create volume-infra replica 2 ubuntu-workernode01:/gfs/infra ubuntu-workernode02:/gfs/infra force > volume-infra.txt"
       args:
         chdir: $HOME
@@ -78,15 +86,30 @@
       when: gluster == "yes" and lb_primary == "yes"
       with_items: "{{ (gluster | default([])) and (lb_primary | default([])) }}"
 
+    - name: Create volume samba
+      shell: "gluster volume create volume-samba replica 2 ubuntu-workernode01:/gfs/samba ubuntu-workernode02:/gfs/samba force > volume-samba.txt"
+      args:
+        chdir: $HOME
+        creates: volume-samba.txt
+      when: gluster == "yes" and lb_primary == "yes"
+      with_items: "{{ (gluster | default([])) and (lb_primary | default([])) }}"
 
 - hosts: all
   become: yes
   tasks:
-    - name: Start volume
+    - name: Start volume infra
       shell: "gluster volume start volume-infra > start_volume.txt"
       args:
         chdir: $HOME
         creates: start_volume.txt
+      when: gluster == "yes" and lb_primary == "yes"
+      with_items: "{{ (gluster | default([])) and (lb_primary | default([])) }}"
+
+    - name: Start volume Samba
+      shell: "gluster volume start volume-samba > start_volume-samba.txt"
+      args:
+        chdir: $HOME
+        creates: start-volume-samba.txt
       when: gluster == "yes" and lb_primary == "yes"
       with_items: "{{ (gluster | default([])) and (lb_primary | default([])) }}"
 

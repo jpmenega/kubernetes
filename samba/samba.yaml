@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: samba
+  namespace: samba
+spec:
+  ports:
+    - port: 139
+    - port: 445
+    - port: 137
+      protocol: UDP
+    - port: 138
+      protocol: UDP
+  selector:
+    app: samba
+  clusterIP: None
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: samba
+  namespace: samba
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: samba
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: samba
+    spec:
+      containers:
+      - image: jpmenegatti/samba:v1
+        name: samba
+        ports:
+          - containerPort: 139
+          - containerPort: 445
+          - containerPort: 137
+            protocol: UDP
+          - containerPort: 138
+            protocol: UDP
+        volumeMounts:
+        - name: samba-persistent-storage
+          mountPath: /mnt
+        command: '-s "volume1;/mnt" -u "bob;bobspasswd" -p'
+      volumes:
+      - name: samba-persistent-storage
+        glusterfs:
+          endpoints: glusterfs-cluster
+          path: volume-samba
+          readOnly: false

@@ -51,7 +51,7 @@ spec:
         volumeMounts:
         - name: samba-persistent-storage
           mountPath: /mnt
-        command: '-s "volume1;/mnt" -u "bob;bobspasswd" -p'
+        command: [ '-s "volume1;/mnt" -u "bob;bobspasswd" -p' ]
       volumes:
       - name: samba-persistent-storage
         glusterfs:

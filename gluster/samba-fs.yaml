@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: zabbix-fs
+  name: samba-fs
   namespace: glusterfs
 spec:
   ports:
     - port: 80
   selector:
-    app: zabbix-fs
+    app: samba-fs
   clusterIP: None
 
 ---
@@ -15,32 +15,32 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: zabbix-fs
+  name: samba-fs
   namespace: glusterfs
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: zabbix-fs
+      app: samba-fs
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: zabbix-fs
+        app: samba-fs
     spec:
       containers:
-      - image: jpmenegatti/fssupport:v2
-        name: zabbix-fs
+      - image: nginx
+        name: samba-fs
         ports:
         - containerPort: 80
         #command: ["bash", "-c", "/'docker-entrypoint.sh'"]
         volumeMounts:
-        - name: mysql-persistent-storage
-          mountPath: /mnt/infra
+        - name: samba-persistent-storage
+          mountPath: /mnt/samba
       volumes:
-      - name: mysql-persistent-storage
+      - name: samba-persistent-storage
         glusterfs:
           endpoints: glusterfs-cluster
-          path: volume-infra
+          path: volume-samba
           readOnly: false

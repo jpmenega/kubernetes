@@ -5,11 +5,15 @@ metadata:
   namespace: samba
 spec:
   ports:
-    - port: 139
-    - port: 445
-    - port: 137
+    - name: netbios-ssn
+      port: 139
+    - name: microsoft-ds
+      port: 445
+    - name: netbios-ns
+      port: 137
       protocol: UDP
-    - port: 138
+    - name: netbios-dgm
+      port: 138
       protocol: UDP
   selector:
     app: samba

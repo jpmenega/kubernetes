@@ -35,7 +35,7 @@ SLAPD_CONF="/etc/openldap/slapd.conf"
 
 # uncomment back_mdb module configurations
 sed -i '/modulepath/s/^#//g' "$SLAPD_CONF"
-sed -i '/back_mdb.so/s/^#//g' "$SLAPD_CONF"
+sed -i '/back_mdb.la/s/^#//g' "$SLAPD_CONF"
 
 if [ "$LDAPS" = true ]; then
   sed -i "s~%CA_FILE%~$CA_FILE~g" "$SLAPD_CONF"
@@ -54,9 +54,9 @@ fi
 
 #sed -i "s~%ROOT_USER%~$ROOT_USER~g" "$SLAPD_CONF"
 #sed -i "s~%SUFFIX%~$SUFFIX~g" "$SLAPD_CONF"
-sed -i '/EVERYTHING/c\$ACCESS_CONTROL' "$SLAPD_CONF"
-sed -i '/suffix/c\suffix        "$SUFFIX"' "$SLAPD_CONF"
-sed -i '/Manager/c\rootdn        "cn=$ROOT_USER,$SUFFIX"' "$SLAPD_CONF"
+sed -i "/EVERYTHING/c\$ACCESS_CONTROL" "$SLAPD_CONF"
+sed -i "/suffix/c\suffix        $SUFFIX" "$SLAPD_CONF"
+sed -i "/Manager/c\rootdn        cn=$ROOT_USER,$SUFFIX" "$SLAPD_CONF"
 #sed -i "s~%ACCESS_CONTROL%~$ACCESS_CONTROL~g" "$SLAPD_CONF"
 
 # encrypt root password before replacing
@@ -92,7 +92,10 @@ for l in /ldif/*; do
   esac
 done
 
+echo "==========================="
 cat $SLAPD_CONF
+echo "==========================="
+echo $SUFFIX
 
 if [ "$LDAPS" = true ]; then
   echo "Starting LDAPS"

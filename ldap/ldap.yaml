@@ -39,6 +39,27 @@ spec:
       containers:
       - image: jpmenegatti/ldap:v6
         name: ldap
+        env:
+        - name: ORGANISATION_NAME
+          value: "UZ Ltda"
+        - name: SUFFIX
+          value: "dc=uz,dc=local"
+        - name: ROOT_USER
+          value: "admin"
+        - name: ROOT_PW
+          value: "Uz2@21TI"
+        - name: USER_UID
+          value: "jpmenega"
+        - name: USER_GIVEN_NAME
+          value: "Joao Paulo"
+        - name: USER_SURNAME
+          value: "Menegatti"
+        - name: USER_EMAIL
+          value: "jpmenegatti@hotmail.com"
+        - name: ACCESS_CONTROL
+          value: "access to * by * read"
+        - name: LOG_LEVEL
+          value: "stats"
         ports:
           - containerPort: 389
             name: ldap

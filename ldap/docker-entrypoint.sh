@@ -52,13 +52,16 @@ else
   sed -i "s~TLSVerifyClient~#&~" "$SLAPD_CONF"
 fi
 
-sed -i "s~%ROOT_USER%~$ROOT_USER~g" "$SLAPD_CONF"
-sed -i "s~%SUFFIX%~$SUFFIX~g" "$SLAPD_CONF"
-sed -i "s~%ACCESS_CONTROL%~$ACCESS_CONTROL~g" "$SLAPD_CONF"
+#sed -i "s~%ROOT_USER%~$ROOT_USER~g" "$SLAPD_CONF"
+#sed -i "s~%SUFFIX%~$SUFFIX~g" "$SLAPD_CONF"
+sed -i '/EVERYTHING/c\$ACCESS_CONTROL' "$SLAPD_CONF"
+sed -i '/suffix/c\suffix        "$SUFFIX"' "$SLAPD_CONF"
+sed -i '/Manager/c\rootdn        "cn=$ROOT_USER,$SUFFIX"' "$SLAPD_CONF"
+#sed -i "s~%ACCESS_CONTROL%~$ACCESS_CONTROL~g" "$SLAPD_CONF"
 
 # encrypt root password before replacing
 ROOT_PW=$(slappasswd -s "$ROOT_PW")
-sed -i "s~%ROOT_PW%~$ROOT_PW~g" "$SLAPD_CONF"
+sed -i "s~secret~$ROOT_PW~g" "$SLAPD_CONF"
 
 # replace variables in organisation configuration
 ORG_CONF="/etc/openldap/organisation.ldif"

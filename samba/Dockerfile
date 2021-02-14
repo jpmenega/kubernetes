@@ -1,3 +1,5 @@
+#https://github.com/dperson/samba
+
 #docker login
 #docker build https://github.com/jpmenega/kubernetes.git#main:samba -t jpmenegatti/samba:v1
 #docker push jpmenegatti/samba:v1

@@ -4,6 +4,7 @@ metadata:
   name: samba
   namespace: samba
 spec:
+  type: NodePort
   ports:
     - name: netbios-ssn
       port: 139
@@ -17,7 +18,6 @@ spec:
       protocol: UDP
   selector:
     app: samba
-  clusterIP: None
 
 ---
 
@@ -51,7 +51,7 @@ spec:
         volumeMounts:
         - name: samba-persistent-storage
           mountPath: /mnt
-        command: [ '-s "volume1;/mnt" -u "bob;bobspasswd" -p' ]
+        args: [ '-s  volume1;/mnt' ]
       volumes:
       - name: samba-persistent-storage
         glusterfs:

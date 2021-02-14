@@ -63,10 +63,19 @@ spec:
         volumeMounts:
         - name: samba-persistent-storage
           mountPath: /mnt
-        args: [ '-s  volume1;/mnt' ]
+        args: [ '-s  volume1;/mnt;yes;no;yes;all;none' ]
       volumes:
       - name: samba-persistent-storage
         glusterfs:
           endpoints: glusterfs-cluster
           path: volume-samba
           readOnly: false
+      tolerations:
+      - key: "node.kubernetes.io/unreachable"
+        operator: "Exists"
+        effect: "NoExecute"
+        tolerationSeconds: 20
+      - key: "node.kubernetes.io/not-ready"
+        operator: "Exists"
+        effect: "NoExecute"
+        tolerationSeconds: 20

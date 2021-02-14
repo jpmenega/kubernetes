@@ -37,7 +37,7 @@ spec:
         app: ldap
     spec:
       containers:
-      - image: jpmenegatti/ldap:v1
+      - image: jpmenegatti/ldap:v2
         name: ldap
         ports:
           - containerPort: 389

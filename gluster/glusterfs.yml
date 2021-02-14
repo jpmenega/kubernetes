@@ -145,11 +145,11 @@
         chdir: $HOME
         creates: gluster-service.txt
 
-    - name: create Zabbix filesystem pod
-      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/zabbix-fs.yaml > zabbix-fs.txt"
+    - name: create Zabbix/LDAP filesystem pod
+      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/infra-fs.yaml > infra-fs.txt"
       args:
         chdir: $HOME
-        creates: zabbix-fs.txt
+        creates: infra-fs.txt
 
     - name: create Samba filesystem pod
       shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/samba-fs.yaml > samba-fs.txt"

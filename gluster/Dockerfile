@@ -1,5 +1,5 @@
 #docker login
-#docker build https://github.com/jpmenega/kubernetes.git#main:zabbix -t jpmenegatti/fssupport:v2
+#docker build https://github.com/jpmenega/kubernetes.git#main:gluster -t jpmenegatti/fssupport:v2
 #docker push jpmenegatti/fssupport:v2
 
 FROM nginx AS fssupport

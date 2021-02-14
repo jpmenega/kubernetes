@@ -8,13 +8,21 @@ spec:
   ports:
     - name: netbios-ssn
       port: 139
+      targetPort: 139
+      nodePort: 30139
     - name: microsoft-ds
       port: 445
+      targetPort: 445
+      nodePort: 30445
     - name: netbios-ns
       port: 137
+      targetPort: 137
+      nodePort: 30137
       protocol: UDP
     - name: netbios-dgm
       port: 138
+      targetPort: 138
+      nodePort: 30138
       protocol: UDP
   selector:
     app: samba
@@ -43,10 +51,14 @@ spec:
         name: samba
         ports:
           - containerPort: 139
+            name: netbios-ssn
           - containerPort: 445
+            name: microsoft-ds
           - containerPort: 137
+            name: netbios-ns
             protocol: UDP
           - containerPort: 138
+            name: netbios-dgm
             protocol: UDP
         volumeMounts:
         - name: samba-persistent-storage

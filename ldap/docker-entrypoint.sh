@@ -89,6 +89,8 @@ for l in /ldif/*; do
   esac
 done
 
+cat $SLAPD_CONF
+
 if [ "$LDAPS" = true ]; then
   echo "Starting LDAPS"
   slapd -d "$LOG_LEVEL" -h "ldaps:///"

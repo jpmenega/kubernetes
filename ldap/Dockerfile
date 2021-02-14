@@ -2,8 +2,8 @@
 #https://github.com/gitphill/ldap-alpine
 
 #docker login
-#docker build https://github.com/jpmenega/kubernetes.git#main:ldap -t jpmenegatti/ldap:v2
-#docker push jpmenegatti/ldap:v2
+#docker build https://github.com/jpmenega/kubernetes.git#main:ldap -t jpmenegatti/ldap:v4
+#docker push jpmenegatti/ldap:v4
 
 FROM alpine
 

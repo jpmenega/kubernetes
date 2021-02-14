@@ -106,7 +106,7 @@
       with_items: "{{ (gluster | default([])) and (lb_primary | default([])) }}"
 
     - name: Start volume Samba
-      shell: "gluster volume start volume-samba > start_volume-samba.txt"
+      shell: "gluster volume start volume-samba > start-volume-samba.txt"
       args:
         chdir: $HOME
         creates: start-volume-samba.txt

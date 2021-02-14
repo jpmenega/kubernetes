@@ -240,6 +240,9 @@ The 'command' (if provided and valid) will be run instead of samba
 [[ "${GROUPID:-""}" =~ ^[0-9]+$ ]] && groupmod -g $GROUPID -o smb
 
 while getopts ":hc:G:g:i:nprs:Su:Ww:I:" opt; do
+    echo $opt
+    echo $OPTARG
+    echo "========"
     case "$opt" in
         h) usage ;;
         c) charmap "$OPTARG" ;;

@@ -33,6 +33,10 @@ fi
 # replace variables in slapd.conf
 SLAPD_CONF="/etc/openldap/slapd.conf"
 
+# uncomment back_mdb module configurations
+sed -i '/modulepath/s/^#//g' "$SLAPD_CONF"
+sed -i '/back_mdb.so/s/^#//g' "$SLAPD_CONF"
+
 if [ "$LDAPS" = true ]; then
   sed -i "s~%CA_FILE%~$CA_FILE~g" "$SLAPD_CONF"
   sed -i "s~%KEY_FILE%~$KEY_FILE~g" "$SLAPD_CONF"

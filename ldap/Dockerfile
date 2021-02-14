@@ -22,7 +22,6 @@ ENV LOG_LEVEL "stats"
 RUN apk add --update openldap openldap-back-mdb && \
     rm -rf /var/cache/apk/*
 
-COPY slapd.conf /etc/openldap
 COPY samba.schema /etc/openldap/schema
 COPY samba.ldif /etc/openldap/schema
 COPY docker-entrypoint.sh /

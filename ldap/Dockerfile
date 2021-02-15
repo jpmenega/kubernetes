@@ -2,8 +2,8 @@
 #https://github.com/gitphill/ldap-alpine
 
 #docker login
-#docker build https://github.com/jpmenega/kubernetes.git#main:ldap -t jpmenegatti/ldap:v7
-#docker push jpmenegatti/ldap:v7
+#docker build https://github.com/jpmenega/kubernetes.git#main:ldap -t jpmenegatti/ldap:v9
+#docker push jpmenegatti/ldap:v9
 
 FROM alpine
 
@@ -15,7 +15,7 @@ ENV USER_UID "jpmenega"
 ENV USER_GIVEN_NAME "Joao Paulo"
 ENV USER_SURNAME "Menegatti"
 ENV USER_EMAIL "jpmenegatti@hotmail.com"
-ENV ACCESS_CONTROL "access to * by * read"
+ENV LDAP_ACCESS_CONTROL "access to * by * read"
 ENV LOG_LEVEL "stats"
 
 # Install ldap

@@ -54,7 +54,7 @@ fi
 
 #sed -i "s~%ROOT_USER%~$ROOT_USER~g" "$SLAPD_CONF"
 #sed -i "s~%SUFFIX%~$SUFFIX~g" "$SLAPD_CONF"
-sed -i "/EVERYTHING/c\$ACCESS_CONTROL" "$SLAPD_CONF"
+sed -i "/EVERYTHING/c\$LDAP_ACCESS_CONTROL" "$SLAPD_CONF"
 sed -i "/suffix/c\suffix        $SUFFIX" "$SLAPD_CONF"
 sed -i "/Manager/c\rootdn        cn=$ROOT_USER,$SUFFIX" "$SLAPD_CONF"
 #sed -i "s~%ACCESS_CONTROL%~$ACCESS_CONTROL~g" "$SLAPD_CONF"
@@ -96,6 +96,8 @@ echo "==========================="
 cat $SLAPD_CONF
 echo "==========================="
 echo $SUFFIX
+echo $LDAP_ACCESS_CONTROL
+echo "==========================="
 
 if [ "$LDAPS" = true ]; then
   echo "Starting LDAPS"

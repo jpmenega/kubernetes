@@ -34,8 +34,13 @@ fi
 SLAPD_CONF="/etc/openldap/slapd.conf"
 
 # uncomment back_mdb module configurations
-sed -i '/modulepath/s/^#//g' "$SLAPD_CONF"
-sed -i '/back_mdb.la/s/^#//g' "$SLAPD_CONF"
+sed -i '/modulepath/s/^# //g' "$SLAPD_CONF"
+sed -i '/back_mdb.la/s/^# //g' "$SLAPD_CONF"
+sed -i "s~back_mdb.la~back_mdb~g" "$SLAPD_CONF"
+
+mkdir /var/lib/openldap/run
+#sed -i "/pidfile/c\pidfile        /run/openldap/slapd.pid" "$SLAPD_CONF"
+#sed -i "/argsfile/c\argsfile        /run/openldap/slapd.argsfile" "$SLAPD_CONF"
 
 if [ "$LDAPS" = true ]; then
   sed -i "s~%CA_FILE%~$CA_FILE~g" "$SLAPD_CONF"
@@ -54,7 +59,8 @@ fi
 
 #sed -i "s~%ROOT_USER%~$ROOT_USER~g" "$SLAPD_CONF"
 #sed -i "s~%SUFFIX%~$SUFFIX~g" "$SLAPD_CONF"
-sed -i "/EVERYTHING/c\$LDAP_ACCESS_CONTROL" "$SLAPD_CONF"
+#sed -i "/EVERYTHING/c\$LDAP_ACCESS_CONTROL" "$SLAPD_CONF"
+echo "access to * by * read" >> "$SLAPD_CONF"
 sed -i "/suffix/c\suffix        $SUFFIX" "$SLAPD_CONF"
 sed -i "/Manager/c\rootdn        cn=$ROOT_USER,$SUFFIX" "$SLAPD_CONF"
 #sed -i "s~%ACCESS_CONTROL%~$ACCESS_CONTROL~g" "$SLAPD_CONF"
@@ -97,6 +103,9 @@ cat $SLAPD_CONF
 echo "==========================="
 echo $SUFFIX
 echo $LDAP_ACCESS_CONTROL
+ls -lah /var/lib/openldap/run/
+echo "xxxx"
+ls -lah /run/openldap/
 echo "==========================="
 
 if [ "$LDAPS" = true ]; then

@@ -47,7 +47,7 @@ spec:
         app: samba
     spec:
       containers:
-      - image: jpmenegatti/samba:v1
+      - image: jpmenegatti/samba:v3
         name: samba
         ports:
           - containerPort: 139

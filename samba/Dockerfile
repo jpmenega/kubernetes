@@ -1,8 +1,8 @@
 #https://github.com/dperson/samba
 
 #docker login
-#docker build https://github.com/jpmenega/kubernetes.git#main:samba -t jpmenegatti/samba:v1
-#docker push jpmenegatti/samba:v1
+#docker build https://github.com/jpmenega/kubernetes.git#main:samba -t jpmenegatti/samba:v2
+#docker push jpmenegatti/samba:v2
 
 FROM alpine
 
@@ -21,6 +21,18 @@ RUN apk --no-cache --no-progress upgrade && \
     sed -i 's|^;* *\(short preserve case = \).*|   \1yes|' $file && \
     sed -i 's|^;* *\(default case = \).*|   \1lower|' $file && \
     sed -i '/Share Definitions/,$d' $file && \
+    echo '   passdb backend = ldapsam:ldap://ldap.uz.local' >>$file && \
+    echo '   domain logons = Yes' >>$file && \
+    echo '   os level = 35' >>$file && \
+    echo '   preferred master = Yes' >>$file && \
+    echo '   ldap suffix = dc=uz,dc=local' >>$file && \
+    echo '   ldap machine suffix = ou=Users' >>$file && \
+    echo '   ldap user suffix = ou=Users' >>$file && \
+    echo '   ldap group suffix = ou=Users' >>$file && \
+    echo '   ldap idmap suffix = ou=Users' >>$file && \
+    echo '   ldap admin dn = cn=admin' >>$file && \
+    echo '   ldap ssl = no' >>$file && \
+    echo '   ldap passwd sync = yes' >>$file && \
     echo '   pam password change = yes' >>$file && \
     echo '   map to guest = bad user' >>$file && \
     echo '   usershare allow guests = yes' >>$file && \

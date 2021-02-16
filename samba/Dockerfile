@@ -1,8 +1,8 @@
 #https://github.com/dperson/samba
 
 #docker login
-#docker build https://github.com/jpmenega/kubernetes.git#main:samba -t jpmenegatti/samba:v2
-#docker push jpmenegatti/samba:v2
+#docker build https://github.com/jpmenega/kubernetes.git#main:samba -t jpmenegatti/samba:v5
+#docker push jpmenegatti/samba:v5
 
 FROM alpine
 
@@ -30,7 +30,7 @@ RUN apk --no-cache --no-progress upgrade && \
     echo '   ldap user suffix = ou=Users' >>$file && \
     echo '   ldap group suffix = ou=Users' >>$file && \
     echo '   ldap idmap suffix = ou=Users' >>$file && \
-    echo '   ldap admin dn = cn=admin' >>$file && \
+    echo '   ldap admin dn = cn=admin,dc=uz,dc=local' >>$file && \
     echo '   ldap ssl = no' >>$file && \
     echo '   ldap passwd sync = yes' >>$file && \
     echo '   pam password change = yes' >>$file && \
@@ -70,6 +70,7 @@ RUN apk --no-cache --no-progress upgrade && \
     echo '   fruit:veto_appledouble = no' >>$file && \
     echo '   fruit:wipe_intentionally_left_blank_rfork = yes' >>$file && \
     echo '' >>$file && \
+    smbpasswd -w Uz2@21TI &&\
     rm -rf /tmp/*
 
 COPY samba.sh /usr/bin/

@@ -47,7 +47,7 @@ spec:
         app: samba
     spec:
       containers:
-      - image: jpmenegatti/samba:v3
+      - image: jpmenegatti/samba:v5
         name: samba
         ports:
           - containerPort: 139
@@ -63,7 +63,7 @@ spec:
         volumeMounts:
         - name: samba-persistent-storage
           mountPath: /mnt
-        args: [ '-s  volume1;/mnt;yes;no;yes;all;none' ]
+        args: [ '-s  volume1;/mnt;yes;no;yes;all;none -s volume2;/mnt;yes;no;no;jpmenega;jpmenega' ]
       volumes:
       - name: samba-persistent-storage
         glusterfs:

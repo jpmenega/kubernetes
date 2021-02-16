@@ -33,7 +33,7 @@ fi
 # replace variables in slapd.conf
 SLAPD_CONF="/etc/openldap/slapd.conf"
 
-sed -i '/^include.*/a include         /etc/openldap/schema/cosine.schema\ninclude         /etc/openldap/schema/inetorgperson.schema'nclude         /etc/openldap/schema/samba.schema "$SLAPD_CONF"
+sed -i '/^include.*/a include         /etc/openldap/schema/cosine.schema\ninclude         /etc/openldap/schema/inetorgperson.schema\ninclude         /etc/openldap/schema/samba.schema' "$SLAPD_CONF"
 
 # uncomment back_mdb module configurations
 sed -i '/modulepath/s/^# //g' "$SLAPD_CONF"

@@ -37,7 +37,7 @@ spec:
         app: ldap
     spec:
       containers:
-      - image: jpmenegatti/ldap:v3
+      - image: jpmenegatti/ldap:v4
         name: ldap
         env:
         - name: ORGANISATION_NAME

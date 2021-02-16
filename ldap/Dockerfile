@@ -2,8 +2,8 @@
 #https://github.com/gitphill/ldap-alpine
 
 #docker login
-#docker build https://github.com/jpmenega/kubernetes.git#main:ldap -t jpmenegatti/ldap:v4
-#docker push jpmenegatti/ldap:v4
+#docker build https://github.com/jpmenega/kubernetes.git#main:ldap -t jpmenegatti/ldap:v5
+#docker push jpmenegatti/ldap:v5
 
 FROM alpine
 
@@ -23,7 +23,7 @@ RUN apk add --update openldap openldap-back-mdb && \
     rm -rf /var/cache/apk/*
 
 COPY samba.schema /etc/openldap/schema
-COPY samba.ldif /etc/openldap/
+COPY samba.ldif /etc/openldap/schema
 COPY users.ldif /etc/openldap/
 COPY organisation.ldif /etc/openldap/ 
 COPY docker-entrypoint.sh /

@@ -23,8 +23,8 @@ RUN apk add --update openldap openldap-back-mdb && \
     rm -rf /var/cache/apk/*
 
 COPY samba.schema /etc/openldap/schema
-COPY samba.ldif /etc/openldap/schema
-COPY users.ldif /etc/openldap/schema
+COPY samba.ldif /etc/openldap/
+COPY users.ldif /etc/openldap/
 COPY organisation.ldif /etc/openldap/schema 
 COPY docker-entrypoint.sh /
 

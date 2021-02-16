@@ -89,7 +89,7 @@ slapadd -l "$ORG_CONF"
 slapadd -l "$USER_CONF"
 
 # add any scripts in ldif
-for l in /etc/openldap/schema/*; do
+for l in /etc/openldap/*; do
   case "$l" in
     *.ldif)  echo "ENTRYPOINT: adding $l";
             slapadd -l $l

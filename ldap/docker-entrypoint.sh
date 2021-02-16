@@ -33,7 +33,7 @@ fi
 # replace variables in slapd.conf
 SLAPD_CONF="/etc/openldap/slapd.conf"
 
-sed '/^include.*/a include         /etc/openldap/schema/cosine.schema\nnclude         /etc/openldap/schema/inetorgperson.schema' "$SLAPD_CONF"
+sed '/^include.*/a include         /etc/openldap/schema/cosine.schema\ninclude         /etc/openldap/schema/inetorgperson.schema' "$SLAPD_CONF"
 
 # uncomment back_mdb module configurations
 sed -i '/modulepath/s/^# //g' "$SLAPD_CONF"
@@ -103,12 +103,12 @@ done
 echo "==========================="
 cat $SLAPD_CONF
 echo "==========================="
-echo $SUFFIX
-echo $LDAP_ACCESS_CONTROL
-ls -lah /var/lib/openldap/run/
-echo "xxxx"
-ls -lah /run/openldap/
-echo "==========================="
+#echo $SUFFIX
+#echo $LDAP_ACCESS_CONTROL
+#ls -lah /var/lib/openldap/run/
+#echo "xxxx"
+#ls -lah /run/openldap/
+#echo "==========================="
 
 if [ "$LDAPS" = true ]; then
   echo "Starting LDAPS"

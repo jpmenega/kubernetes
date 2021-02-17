@@ -236,6 +236,8 @@ The 'command' (if provided and valid) will be run instead of samba
     exit $RC
 }
 
+/usr/sbin/nslcd -d &
+
 [[ "${USERID:-""}" =~ ^[0-9]+$ ]] && usermod -u $USERID -o smbuser
 [[ "${GROUPID:-""}" =~ ^[0-9]+$ ]] && groupmod -g $GROUPID -o smb
 

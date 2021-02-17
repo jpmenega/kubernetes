@@ -63,7 +63,7 @@ spec:
         volumeMounts:
         - name: samba-persistent-storage
           mountPath: /mnt
-        args: [ '-s  volume1;/mnt;yes;no;yes;all;none', '-s volume2;/mnt;yes;no;no;jpmenega;jpmenega' ]
+        args: [ '-s  volume1;/mnt;yes;no;yes;all;none', '-s volume2;/mnt;yes;no;no;teste;admin' ]
       volumes:
       - name: samba-persistent-storage
         glusterfs:

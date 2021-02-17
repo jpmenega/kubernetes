@@ -1,14 +1,14 @@
 #https://github.com/dperson/samba
 
 #docker login
-#docker build https://github.com/jpmenega/kubernetes.git#main:samba -t jpmenegatti/samba:v5
-#docker push jpmenegatti/samba:v5
+#docker build https://github.com/jpmenega/kubernetes.git#main:samba -t jpmenegatti/samba:v8
+#docker push jpmenegatti/samba:v8
 
 FROM alpine
 
 # Install samba
 RUN apk --no-cache --no-progress upgrade && \
-    apk --no-cache --no-progress add bash samba shadow tini tzdata && \
+    apk --no-cache --no-progress add bash samba shadow tini tzdata nss-pam-ldapd &&\
     addgroup -S smb && \
     adduser -S -D -H -h /tmp -s /sbin/nologin -G smb -g 'Samba User' smbuser &&\
     file="/etc/samba/smb.conf" && \
@@ -21,18 +21,19 @@ RUN apk --no-cache --no-progress upgrade && \
     sed -i 's|^;* *\(short preserve case = \).*|   \1yes|' $file && \
     sed -i 's|^;* *\(default case = \).*|   \1lower|' $file && \
     sed -i '/Share Definitions/,$d' $file && \
-    echo '   passdb backend = ldapsam:ldap://ldap.uz.local' >>$file && \
+    #echo '   passdb backend = ldapsam:ldap://ldap.uz.local' >>$file && \
+    echo '   idmap_ldb:use rfc2307 = Yes' >>$file && \
     echo '   domain logons = Yes' >>$file && \
     echo '   os level = 35' >>$file && \
     echo '   preferred master = Yes' >>$file && \
-    echo '   ldap suffix = dc=uz,dc=local' >>$file && \
-    echo '   ldap machine suffix = ou=Users' >>$file && \
-    echo '   ldap user suffix = ou=Users' >>$file && \
-    echo '   ldap group suffix = ou=Users' >>$file && \
-    echo '   ldap idmap suffix = ou=Users' >>$file && \
-    echo '   ldap admin dn = cn=admin,dc=uz,dc=local' >>$file && \
-    echo '   ldap ssl = no' >>$file && \
-    echo '   ldap passwd sync = yes' >>$file && \
+    #echo '   ldap suffix = dc=uz,dc=local' >>$file && \
+    #echo '   ldap machine suffix = ou=Users' >>$file && \
+    #echo '   ldap user suffix = ou=Users' >>$file && \
+    #echo '   ldap group suffix = ou=Users' >>$file && \
+    #echo '   ldap idmap suffix = ou=Users' >>$file && \
+    #echo '   ldap admin dn = cn=admin,dc=uz,dc=local' >>$file && \
+    #echo '   ldap ssl = no' >>$file && \
+    #echo '   ldap passwd sync = yes' >>$file && \
     echo '   pam password change = yes' >>$file && \
     echo '   map to guest = bad user' >>$file && \
     echo '   usershare allow guests = yes' >>$file && \
@@ -70,7 +71,10 @@ RUN apk --no-cache --no-progress upgrade && \
     echo '   fruit:veto_appledouble = no' >>$file && \
     echo '   fruit:wipe_intentionally_left_blank_rfork = yes' >>$file && \
     echo '' >>$file && \
-    smbpasswd -w Uz2@21TI &&\
+    #smbpasswd -w Uz2@21TI &&\
+    file="/etc/nslcd.conf" && \
+    sed -i "/uri ldap/c\uri ldap://192.168.1.250/" $file &&\
+    sed -i "/base dc=example,dc=com/c\base dc=uz,dc=local" $file &&\
     rm -rf /tmp/*
 
 COPY samba.sh /usr/bin/

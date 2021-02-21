@@ -83,13 +83,15 @@ spec:
           - containerPort: 636
             name: ldap-s
         volumeMounts:
-        - name: samba_data-persistent-storage
+        - name: samba-data-persistent-storage
           mountPath: /var/lib/samba
-        - name: samba_config_samba-persistent-storage
+        - name: samba-config-samba-persistent-storage
           mountPath: /etc/samba/external
         - name: localtime
           mountPath: /etc/localtime
         #args: [ '-s  volume1;/mnt;yes;no;yes;all;none', '-s volume2;/mnt;yes;no;no;jpmenega;admin' ]
+        securityContext:
+          privileged: true
       hostname: adc01
       dnsConfig:
         nameservers:
@@ -97,15 +99,13 @@ spec:
           - 192.168.1.1
         searches:
           - uz.com.br
-      securityContext:
-          privileged: true
       volumes:
-      - name: samba_data-persistent-storage
+      - name: samba-data-persistent-storage
         glusterfs:
           endpoints: glusterfs-cluster
           path: volume-samba/samba/data
           readOnly: false
-      - name: samba_config_samba-persistent-storage
+      - name: samba-config-samba-persistent-storage
         glusterfs:
           endpoints: glusterfs-cluster
           path: volume-samba/samba/config/samba

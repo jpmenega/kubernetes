@@ -78,7 +78,7 @@ kubectl get nodes
 
 ansible-playbook -i hosts ~/kube-cluster/gluster/glusterfs.yml
 ansible-playbook -i hosts ~/kube-cluster/zabbix/zabbix.yml
-ansible-playbook -i hosts ~/kube-cluster/zabbix/samba.yml
+ansible-playbook -i hosts ~/kube-cluster/samba-dc/samba-dc.yml
 
 --------------------
 Know issues:

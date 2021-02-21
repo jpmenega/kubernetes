@@ -1,3 +1,9 @@
+#https://github.com/Fmstrat/samba-domain
+
+#docker login
+#docker build https://github.com/jpmenega/kubernetes.git#main:samba-dc -t jpmenegatti/samba-dc:v1
+#docker push jpmenegatti/samba-dc:v1
+
 FROM ubuntu:xenial
 MAINTAINER Fmstrat <fmstrat@NOSPAM.NO>
 

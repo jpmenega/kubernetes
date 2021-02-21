@@ -1,0 +1,37 @@
+- hosts: ubuntu-masternode01
+  become: yes
+  become_user: ubuntu
+  tasks:
+    - name: create namespace
+      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/samba-dc/samba-ns.yaml > samba-namespace.txt"
+      args:
+        chdir: $HOME
+        creates: samba-namespace.txt
+
+    - name: create glusterfs-endpoints
+      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/samba-dc/glusterfs-endpoints.yaml > samba-gluster-endpoints.txt"
+      args:
+        chdir: $HOME
+        creates: samba-gluster-endpoints.txt
+      when: notaint == "yes"
+      with_items: "{{ notaint | default([]) }}"
+
+    - name: create glusterfs-endpoints (taint)
+      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/samba-dc/glusterfs-endpoints-taint.yaml > samba-gluster-endpoints-taint.txt"
+      args:
+        chdir: $HOME
+        creates: samba-gluster-endpoints-taint.txt
+      when: taint == "yes"
+      with_items: "{{ taint | default([]) }}"
+
+    - name: create glusterfs-service
+      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/samba-dc/glusterfs-service.yaml > samba-gluster-service.txt"
+      args:
+        chdir: $HOME
+        creates: samba-gluster-service.txt
+
+    - name: create samba pod
+      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/samba-dc/samba.yaml > samba.txt"
+      args:
+        chdir: $HOME
+        creates: samba.txt

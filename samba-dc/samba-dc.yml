@@ -1,3 +1,18 @@
+- hosts: all
+  become: yes
+  tasks:
+     - name: "Install ACL"
+      apt:
+       name: acl
+       state: present
+       update_cache: true
+
+    - name: "Install attr"
+      apt:
+       name: attr
+       state: present
+       update_cache: true
+
 - hosts: ubuntu-masternode01
   become: yes
   become_user: ubuntu

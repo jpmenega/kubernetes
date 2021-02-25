@@ -50,6 +50,7 @@ mount /dev/sdb1 /gfs/infra
 
 vi /etc/fstab
 /dev/sdb1       /gfs/infra   ext4    defaults,nofail
+/dev/sdc1       /gfs/samba   ext4    user_xattr,acl,barrier=1 1 1
 
 ============================
 Source script server pre req

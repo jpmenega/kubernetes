@@ -1,8 +1,0 @@
-dn: %SUFFIX%
-objectClass: dcObject
-objectClass: organization
-o: %ORGANISATION_NAME%
-
-dn: ou=Users,%SUFFIX%
-objectClass: organizationalUnit
-ou: Users

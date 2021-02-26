@@ -100,6 +100,8 @@ spec:
           mountPath: /var/lib/samba
         - name: samba-config-samba-persistent-storage
           mountPath: /etc/samba/external
+        - name: samba-volumes-persistent-storage
+          mountPath: /mnt
         - name: localtime
           mountPath: /etc/localtime
         #args: [ '-s  volume1;/mnt;yes;no;yes;all;none', '-s volume2;/mnt;yes;no;no;jpmenega;admin' ]
@@ -122,6 +124,11 @@ spec:
         glusterfs:
           endpoints: glusterfs-cluster
           path: volume-samba/config/samba
+          readOnly: false
+      - name: samba-volumes-persistent-storage
+        glusterfs:
+          endpoints: glusterfs-cluster
+          path: volume-samba/volumes
           readOnly: false
       - name: localtime
         hostPath:

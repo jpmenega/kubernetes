@@ -1,50 +1,50 @@
-apiVersion: v1
-kind: Service
-metadata:
-  name: samba
-  namespace: samba-dc
-spec:
-  type: NodePort
-  ports:
-    - name: dns-tcp
-      port: 53
-      targetPort: 53
-      nodePort: 30053
-    - name: dns-udp
-      port: 53
-      targetPort: 53
-      nodePort: 30053
-      protocol: UDP
-    - name: netbios-ssn
-      port: 139
-      targetPort: 139
-      nodePort: 30139
-    - name: microsoft-ds
-      port: 445
-      targetPort: 445
-      nodePort: 30445
-    - name: netbios-ns
-      port: 137
-      targetPort: 137
-      nodePort: 30137
-      protocol: UDP
-    - name: netbios-dgm
-      port: 138
-      targetPort: 138
-      nodePort: 30138
-      protocol: UDP
-    - name: ldap
-      port: 389
-      targetPort: 389
-      nodePort: 30389
-    - name: ldap-s
-      port: 636
-      targetPort: 636
-      nodePort: 30636
-  selector:
-    app: samba
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: samba
+#  namespace: samba-dc
+#spec:
+#  type: NodePort
+#  ports:
+#    - name: dns-tcp
+#      port: 53
+#      targetPort: 53
+#      nodePort: 30053
+#    - name: dns-udp
+#      port: 53
+#      targetPort: 53
+#      nodePort: 30053
+#      protocol: UDP
+#    - name: netbios-ssn
+#      port: 139
+#      targetPort: 139
+#      nodePort: 30139
+#    - name: microsoft-ds
+#      port: 445
+#      targetPort: 445
+#      nodePort: 30445
+#    - name: netbios-ns
+#      port: 137
+#      targetPort: 137
+#      nodePort: 30137
+#      protocol: UDP
+#    - name: netbios-dgm
+#      port: 138
+#      targetPort: 138
+#      nodePort: 30138
+#      protocol: UDP
+#    - name: ldap
+#      port: 389
+#      targetPort: 389
+#      nodePort: 30389
+#    - name: ldap-s
+#      port: 636
+#      targetPort: 636
+#      nodePort: 30636
+#  selector:
+#    app: samba
 
----
+#---
 
 apiVersion: apps/v1
 kind: Deployment
@@ -62,9 +62,11 @@ spec:
     metadata:
       labels:
         app: samba
+      annotations:
+        k8s.v1.cni.cncf.io/networks: samba-ad-dc-static-ip-conf
     spec:
       containers:
-      - image: jpmenegatti/samba-dc:v1
+      - image: jpmenegatti/samba-dc:v4
         name: samba
         env:
         - name: DOMAIN
@@ -74,7 +76,7 @@ spec:
         - name: DNSFORWARDER
           value: "192.168.1.1"
         - name: HOSTIP
-          value: "192.168.1.250"
+          value: "192.168.1.247"
         ports:
           - containerPort: 53
             name: dns-tcp
@@ -100,8 +102,8 @@ spec:
           mountPath: /var/lib/samba
         - name: samba-config-samba-persistent-storage
           mountPath: /etc/samba/external
-        - name: samba-volumes-persistent-storage
-          mountPath: /mnt
+        #- name: samba-volumes-persistent-storage
+        #  mountPath: /mnt
         - name: localtime
           mountPath: /etc/localtime
         #args: [ '-s  volume1;/mnt;yes;no;yes;all;none', '-s volume2;/mnt;yes;no;no;jpmenega;admin' ]
@@ -110,7 +112,7 @@ spec:
       hostname: adc01
       dnsConfig:
         nameservers:
-          - 192.168.1.250
+          - 192.168.1.247
           - 192.168.1.1
         searches:
           - uz.com.br
@@ -125,11 +127,11 @@ spec:
           endpoints: glusterfs-cluster
           path: volume-samba/config/samba
           readOnly: false
-      - name: samba-volumes-persistent-storage
-        glusterfs:
-          endpoints: glusterfs-cluster
-          path: volume-samba/volumes
-          readOnly: false
+      #- name: samba-volumes-persistent-storage
+      #  glusterfs:
+      #    endpoints: glusterfs-cluster
+      #    path: volume-samba/volumes
+      #    readOnly: false
       - name: localtime
         hostPath:
           path: /etc/localtime

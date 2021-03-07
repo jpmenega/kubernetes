@@ -30,6 +30,14 @@
       when: hostvars[item].ansible_host is defined
       with_items: "{{ groups['all'] }}"
 
+    - name: Download Zabbix release
+      get_url: 
+        url="{{ zabbix_agent_package_url }}"
+        dest="/root/{{ zabbix_agent_package_name }}.deb"
+
+    - name: Install my_package
+      apt: deb="/root/{{ zabbix_agent_package_name }}.deb"
+
     - name: "Install zabbix-agent"
       apt:
        name: zabbix-agent
@@ -42,9 +50,12 @@
         mode: u=rw,g=r,o=r
         owner: zabbix
         content: |
-            LogFile=/tmp/zabbix_agentd.log
-            Server=192.168.1.252,192.168.1.243,192.168.1.244
-            Include=/etc/zabbix/zabbix_agentd.conf.d/
+            PidFile=/run/zabbix/zabbix_agentd.pid
+            LogFile=/var/log/zabbix/zabbix_agentd.log
+            LogFileSize=0
+            Server=192.168.1.252,192.168.1.241,192.168.1.242,192.168.1.243
+            ServerActive=127.0.0.1
+            Include=/etc/zabbix/zabbix_agentd.d/*.conf
             Hostname={{ ansible_hostname }}
 
     - name: gluster-monitoring.pl
@@ -66,7 +77,7 @@
     - name: gluster.conf
       shell: "wget https://raw.githubusercontent.com/jpmenega/kubernetes/main/main/zabbix-agent/gluster.conf"
       args:
-        chdir: /etc/zabbix/zabbix_agentd.conf.d
+        chdir: /etc/zabbix/zabbix_agentd.d
         creates: gluster.conf
       when: gluster == "yes"
       with_items: "{{ gluster | default([]) }}"

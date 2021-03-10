@@ -33,6 +33,7 @@ network:
         - 192.168.1.1
         search:
         - uz.local
+    eth1: {}
   version: 2
 -----
 reboot
@@ -77,6 +78,7 @@ ansible-playbook -i hosts ~/kube-cluster/kubernetes/workers.yml
 ssh ubuntu@master_ip
 kubectl get nodes
 
+ansible-playbook -i hosts ~/kube-cluster/ovs/openvswitch.yml
 ansible-playbook -i hosts ~/kube-cluster/gluster/glusterfs.yml
 ansible-playbook -i hosts ~/kube-cluster/zabbix/zabbix.yml
 ansible-playbook -i hosts ~/kube-cluster/samba-dc/samba-dc.yml

@@ -118,15 +118,21 @@ spec:
           - uz.com.br
       volumes:
       - name: samba-data-persistent-storage
-        glusterfs:
-          endpoints: glusterfs-cluster
-          path: volume-samba/data
-          readOnly: false
+        hostPath:
+          path: /mnt/samba/data
       - name: samba-config-samba-persistent-storage
-        glusterfs:
-          endpoints: glusterfs-cluster
-          path: volume-samba/config/samba
-          readOnly: false
+        hostPath:
+          path: /mnt/samba/config/samba
+      #- name: samba-data-persistent-storage
+      #  glusterfs:
+      #    endpoints: glusterfs-cluster
+      #    path: volume-samba/data
+      #    readOnly: false
+      #- name: samba-config-samba-persistent-storage
+      #  glusterfs:
+      #    endpoints: glusterfs-cluster
+      #    path: volume-samba/config/samba
+      #    readOnly: false
       #- name: samba-volumes-persistent-storage
       #  glusterfs:
       #    endpoints: glusterfs-cluster

@@ -113,46 +113,80 @@
       when: gluster == "yes" and lb_primary == "yes"
       with_items: "{{ (gluster | default([])) and (lb_primary | default([])) }}"
 
-- hosts: ubuntu-masternode01
-  become: yes
-  become_user: ubuntu
-  tasks:
-    - name: create namespace
-      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/glusterfs-ns.yaml > gluster-namespace.txt"
-      args:
-        chdir: $HOME
-        creates: gluster-namespace.txt
+    - name: Creates infra client directory
+      file:
+        path: /mnt/infra
+        state: directory
 
-    - name: create glusterfs-endpoints
-      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/glusterfs-endpoints.yaml > gluster-endpoints.txt"
-      args:
-        chdir: $HOME
-        creates: gluster-endpoints.txt
-      when: notaint == "yes"
-      with_items: "{{ notaint | default([]) }}"
+    - name: Creates samba client directory
+      file:
+        path: /mnt/samba
+        state: directory
 
-    - name: create glusterfs-endpoints (taint)
-      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/glusterfs-endpoints-taint.yaml > gluster-endpoint-taint.txt"
+    - name: Mount infra client directory
+      shell: "mount -t glusterfs localhost:volume-infra /mnt/infra > gluster-mount-infra.txt"
       args:
         chdir: $HOME
-        creates: gluster-endpoints-taint.txt
-      when: taint == "yes"
-      with_items: "{{ taint | default([]) }}"
+        creates: gluster-mount-infra.txt
 
-    - name: create glusterfs-service
-      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/glusterfs-service.yaml > gluster-service.txt"
+    - name: Mount samba client directory
+      shell: "mount -t glusterfs -o acl localhost:volume-samba /mnt/samba > gluster-mount-samba.txt"
       args:
         chdir: $HOME
-        creates: gluster-service.txt
+        creates: gluster-mount-samba.txt
+    
+    #- name: Update fstab infra
+    #  lineinfile:
+    #    dest: /etc/fstab
+    #    line: localhost:volume-infra       /mnt/infra   glusterfs    defaults,_netdev 0 0
+    #  when: test_grep.stdout == "0"
 
-    - name: create Zabbix/LDAP filesystem pod
-      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/infra-fs.yaml > infra-fs.txt"
-      args:
-        chdir: $HOME
-        creates: infra-fs.txt
+    #- name: Update fstab samba
+    #  lineinfile:
+    #    dest: /etc/fstab
+    #    line: localhost:volume-samba       /mnt/samba   glusterfs    acl,_netdev 0 0
+    #  when: test_grep.stdout == "0"
 
-    - name: create Samba filesystem pod
-      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/samba-fs.yaml > samba-fs.txt"
-      args:
-        chdir: $HOME
-        creates: samba-fs.txt
+#- hosts: ubuntu-masternode01
+#  become: yes
+#  become_user: ubuntu
+#  tasks:
+#    - name: create namespace
+#      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/glusterfs-ns.yaml > gluster-namespace.txt"
+#      args:
+#        chdir: $HOME
+#        creates: gluster-namespace.txt
+#
+#    - name: create glusterfs-endpoints
+#      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/glusterfs-endpoints.yaml > gluster-endpoints.txt"
+#      args:
+#        chdir: $HOME
+#        creates: gluster-endpoints.txt
+#      when: notaint == "yes"
+#      with_items: "{{ notaint | default([]) }}"
+#
+#    - name: create glusterfs-endpoints (taint)
+#      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/glusterfs-endpoints-taint.yaml > gluster-endpoint-taint.txt"
+#      args:
+#        chdir: $HOME
+#        creates: gluster-endpoints-taint.txt
+#      when: taint == "yes"
+#      with_items: "{{ taint | default([]) }}"
+#
+#    - name: create glusterfs-service
+#      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/glusterfs-service.yaml > gluster-service.txt"
+#      args:
+#        chdir: $HOME
+#        creates: gluster-service.txt
+#
+#    - name: create Zabbix/LDAP filesystem pod
+#      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/infra-fs.yaml > infra-fs.txt"
+#      args:
+#        chdir: $HOME
+#        creates: infra-fs.txt
+#
+#    - name: create Samba filesystem pod
+#      shell: "kubectl apply -f https://raw.githubusercontent.com/jpmenega/kubernetes/main/gluster/samba-fs.yaml > samba-fs.txt"
+#      args:
+#        chdir: $HOME
+#        creates: samba-fs.txt

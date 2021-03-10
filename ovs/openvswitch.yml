@@ -1,0 +1,57 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: "Install openvswitch-switch"
+      apt:
+       name: openvswitch-switch
+       state: present
+       update_cache: true
+
+    - name: Enable service openvswitch-switch
+      service:
+       name: openvswitch-switch.service
+       enabled: yes
+
+    - name: Restart openvswitch-switch
+      service:
+        name: openvswitch-switch.service
+        state: restarted
+
+    - name: Create Bridge
+      shell: "ovs-vsctl add-br br0 > ovs-create-bridge.txt"
+      args:
+        chdir: $HOME
+        creates: ovs-create-bridge.txt
+
+    - name: Add Bridge uplink
+      shell: "ovs-vsctl add-port br0 eth1 > ovs-bridge-uplink.txt"
+      args:
+        chdir: $HOME
+        creates: ovs-bridge-uplink.txt
+
+    - name: Bring bridge NIC up
+      shell: ip link set dev br0 up >> ovs-bring-bridge-up.txt
+      args:
+        chdir: $HOME
+        creates: ovs-bring-bridge-up.txt
+
+
+- hosts: ubuntu-masternode01
+  become: yes
+  gather_facts: false
+  tasks:
+    - name: Apply Multus Deamonset
+      become: yes
+      become_user: ubuntu
+      shell: kubectl apply -f https://raw.githubusercontent.com/intel/multus-cni/master/images/multus-daemonset.yml >> ovs-multus-daemonset.txt
+      args:
+        chdir: $HOME
+        creates: ovs-multus-daemonset.txt
+
+    - name: Apply OVS CNI
+      become: yes
+      become_user: ubuntu
+      shell: kubectl apply -f https://raw.githubusercontent.com/kubevirt/ovs-cni/master/examples/ovs-cni.yml >> ovs-cni.txt
+      args:
+        chdir: $HOME
+        creates: ovs-cni.txt

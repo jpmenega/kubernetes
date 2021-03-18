@@ -64,8 +64,11 @@ appSetup () {
 			wins support = yes\\n\
 			template shell = /bin/bash\\n\
 			winbind nss info = rfc2307\\n\
-			idmap config ${URDOMAIN}: range = 10000-20000\\n\
-			idmap config ${URDOMAIN}: backend = ad\
+			idmap config ${URDOMAIN}: range = 500-700000\\n\
+                        idmap config ${URDOMAIN}: schema_mode = rfc2307\\n\
+			idmap config ${URDOMAIN}: backend = ad\\n\
+                        idmap config *: backend = tdb\\n\
+                        idmap config *: range = 700001-800000\
 			" /etc/samba/smb.conf
 		if [[ $DNSFORWARDER != "NONE" ]]; then
 			sed -i "/\[global\]/a \

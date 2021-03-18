@@ -51,13 +51,14 @@ kind: NetworkAttachmentDefinition
 metadata:
   name: samba-ad-dc-static-ip-conf
   namespace: samba-dc
+
 spec:
   config: '{
     "cniVersion": "0.3.1",
     "type": "ovs",
     "bridge": "br0",
     "ipam": {
-     "subnet": "192.168.1.247/24"
+      "type": "static"
     }
   }'
 
@@ -80,10 +81,15 @@ spec:
       labels:
         app: samba
       annotations:
-        k8s.v1.cni.cncf.io/networks: samba-ad-dc-static-ip-conf
+        k8s.v1.cni.cncf.io/networks: '[
+          {
+            "name": "samba-ad-dc-static-ip-conf",
+            "ips": ["192.168.1.247/24"]
+          }
+        ]'
     spec:
       containers:
-      - image: jpmenegatti/samba-dc:v8
+      - image: jpmenegatti/samba-dc:v10
         name: samba
         env:
         - name: DOMAIN
